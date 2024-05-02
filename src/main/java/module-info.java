@@ -1,6 +1,7 @@
 module com.example.tgpsi_m19_luciano_bajurea {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.sql;
 
 
     opens com.example.tgpsi_m19_luciano_bajurea to javafx.fxml;
