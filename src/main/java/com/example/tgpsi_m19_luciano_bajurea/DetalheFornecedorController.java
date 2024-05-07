@@ -1,22 +1,33 @@
 package com.example.tgpsi_m19_luciano_bajurea;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 
 public class DetalheFornecedorController {
-    public TextField detailNameProduct;
-    public TextField detailCategoryProduct;
-    public TextField detailPriceProduct;
-    public TextField detailDesProduct;
-    public Button btnReturn;
-    public TextField detailNameFornecedor;
-    public TextField detailMoradaFornecedor;
-    public TextField detailNumTelFornecedor;
-    public TextField detailNifFornecedor;
-    public TextField detailEmailFornecedor;
+    @FXML
+    private TextField detailNameProduct;
+    @FXML
+    private TextField detailCategoryProduct;
+    @FXML
+    private TextField detailPriceProduct;
+    @FXML
+    private TextField detailDesProduct;
+    @FXML
+    private Button btnReturn;
+    @FXML
+    private TextField detailNameFornecedor;
+    @FXML
+    private TextField detailMoradaFornecedor;
+    @FXML
+    private TextField detailNumTelFornecedor;
+    @FXML
+    private TextField detailNifFornecedor;
+    @FXML
+    private TextField detailEmailFornecedor;
 
     public void buttonCloseApp(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

@@ -3,6 +3,7 @@ package com.example.tgpsi_m19_luciano_bajurea;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
@@ -19,30 +20,54 @@ import java.util.List;
 import static com.example.tgpsi_m19_luciano_bajurea.ConexaoBD.*;
 
 public class PrincipalController {
-    public AnchorPane AnchorPaneMain;
-    public Button btnAbout;
-    public Button btnClient;
-    public Button btnSeller;
-    public Button btnProduct;
-    public AnchorPane AnchorPaneProduct;
-    public TableView tableViewProduct;
-    public TableColumn tableColumnIdProduct;
-    public TableColumn tableColumnNameProduct;
-    public TableColumn tableColumnTypeProduct;
-    public TableColumn tableColumnPriceProduct;
-    public TextField productId;
-    public TextField productName;
-    public ComboBox productCategoria;
-    public TextField productPrice;
-    public Button btnAdd;
-    public Button btnRemove;
-    public Button btnEdit;
-    public AnchorPane AnchorPaneAbout;
-    public AnchorPane AnchorPaneClient;
-    public TableView tableViewClient;
-    public TableColumn tableColumnIdClient;
-    public TableColumn tableColumnNameClient;
-    public TableColumn tableColumnAdressClient;
+    @FXML
+    private AnchorPane AnchorPaneMain;
+    @FXML
+    private Button btnAbout;
+    @FXML
+    private Button btnClient;
+    @FXML
+    private Button btnSeller;
+    @FXML
+    private Button btnProduct;
+    @FXML
+    private AnchorPane AnchorPaneProduct;
+    @FXML
+    private TableView tableViewProduct;
+    @FXML
+    private TableColumn tableColumnIdProduct;
+    @FXML
+    private TableColumn tableColumnNameProduct;
+    @FXML
+    private TableColumn tableColumnTypeProduct;
+    @FXML
+    private TableColumn tableColumnPriceProduct;
+    @FXML
+    private TextField productId;
+    @FXML
+    private TextField productName;
+    @FXML
+    private ComboBox productCategoria;
+    @FXML
+    private TextField productPrice;
+    @FXML
+    private Button btnAdd;
+    @FXML
+    private Button btnRemove;
+    @FXML
+    private Button btnEdit;
+    @FXML
+    private AnchorPane AnchorPaneAbout;
+    @FXML
+    private AnchorPane AnchorPaneClient;
+    @FXML
+    private TableView tableViewClient;
+    @FXML
+    private TableColumn tableColumnIdClient;
+    @FXML
+    private TableColumn tableColumnNameClient;
+    @FXML
+    private TableColumn tableColumnAdressClient;
     public TableColumn tableColumnNumberTelClient;
     public TableColumn tableColumnEmailCliente;
     public TextField clientId;
@@ -63,12 +88,14 @@ public class PrincipalController {
     public TextField FornecedorSearch;
     public TextField fornecedorId;
     public TextField fornecedorName;
+    public TextField fornecedorNIF;
     public TextField fornecedorAdress;
     public TextField fornecedorNumTel;
     public TextField fornecedorEmail;
     public Button btnFornecedorAdd;
     public Button btnFornecedorRemove;
     public Button btnFornecedorEdit;
+    public Button btnFornecedorDetalhe;
 
     public void buttonOnClient(ActionEvent actionEvent) {
         // Oculta os painéis relacionados a Clientes, Vendedores e Informações "Acerca de..."
@@ -166,7 +193,7 @@ public class PrincipalController {
                                 PreparedStatement stmt = conn.prepareStatement(sql);
                                 stmt.setInt(1, newId);
                                 stmt.setString(2, newName);
-                                stmt.setDouble(4, newPrice);
+                                stmt.setDouble(3, newPrice);
                                 stmt.executeUpdate();
 
                                 // Exibe um alerta informativo sobre a adição bem-sucedida
@@ -258,7 +285,7 @@ public class PrincipalController {
 
     public void buttonFornAdd(ActionEvent actionEvent) {
         // Verifica se algum dos campos essenciais está vazio
-        if (productId.getText().isEmpty() || productName.getText().isEmpty() || productCategoria.getSelectionModel().getSelectedItem() == null || productPrice.getText().isEmpty()) {
+        if (fornecedorId.getText().isEmpty() || fornecedorName.getText().isEmpty() || fornecedorNIF.getText().isEmpty() || fornecedorAdress.getText().isEmpty() || fornecedorEmail.getText().isEmpty() || fornecedorNumTel.getText().isEmpty()) {
             // Exibe um alerta de erro se algum campo estiver vazio
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO");
@@ -270,16 +297,18 @@ public class PrincipalController {
                 Connection conn = ConexaoBD.openDB();
                 if (conn != null) {
                     // Se tudo estiver correto, obtém os detalhes do novo produto
-                    int newId = Integer.parseInt(productId.getText());
-                    String newName = productName.getText();
-                    String newCategoria = String.valueOf(productCategoria.getSelectionModel().getSelectedItem());
-                    double newPrice = Double.parseDouble(productPrice.getText());
+                    int newId = Integer.parseInt(fornecedorId.getText());
+                    String newName = fornecedorName.getText();
+                    String newNIF = fornecedorNIF.getText();
+                    String newAdress = fornecedorAdress.getText();
+                    String newEmail = fornecedorEmail.getText();
+                    String newNumTel = fornecedorNumTel.getText();
 
                     // Cria um alerta de confirmação para a adição do produto
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("CONFIRMAR");
                     alert.setHeaderText("Deseja mesmo adicionar este produto?");
-                    alert.setContentText("Nome: " + newName + "\nPreço: " + newPrice + "\nDeseja mesmo adicionar?");
+                    alert.setContentText("Nome: " + newName + "\nNIF: " + newNIF + "\nMorada: " +newAdress +"\nEmail:"+newEmail+"\nNúmero de Telemovel: " + newNumTel +"\nDeseja mesmo adicionar?");
                     ButtonType buttonSim = new ButtonType("Sim");
                     ButtonType buttonNao = new ButtonType("Não");
                     alert.getButtonTypes().setAll(buttonSim, buttonNao);
@@ -289,11 +318,14 @@ public class PrincipalController {
                         if (buttonType == buttonSim) {
                             // Tenta adicionar o novo produto ao banco de dados
                             try {
-                                String sql = "INSERT INTO fornecedor (idFornecedor, nome, email, ) VALUES (?, ?, ?, ?)";
+                                String sql = "INSERT INTO fornecedor (idFornecedor, nome, nif, morada, email, numTelemovel ) VALUES (?, ?, ?, ?)";
                                 PreparedStatement stmt = conn.prepareStatement(sql);
                                 stmt.setInt(1, newId);
                                 stmt.setString(2, newName);
-                                stmt.setDouble(4, newPrice);
+                                stmt.setString(3, newNIF);
+                                stmt.setString(4, newAdress);
+                                stmt.setString(5, newEmail);
+                                stmt.setString(6, newNumTel);
                                 stmt.executeUpdate();
 
                                 // Exibe um alerta informativo sobre a adição bem-sucedida
@@ -306,9 +338,10 @@ public class PrincipalController {
                                 // Limpa os campos após a adição bem-sucedida
                                 fornecedorId.clear();
                                 fornecedorName.clear();
+                                fornecedorNIF.clear();
                                 fornecedorAdress.clear();
-                                fornecedorNumTel.clear();
                                 fornecedorEmail.clear();
+                                fornecedorNumTel.clear();
                             } catch (SQLException e) {
                                 // Exibe um alerta de erro se ocorrer um erro ao adicionar o produto ao banco de dados
                                 Alert alertError = new Alert(Alert.AlertType.ERROR);
@@ -345,9 +378,6 @@ public class PrincipalController {
 
     public void buttonFornEdit(ActionEvent actionEvent) {
     }
-
-
-
     public void buttonFornDetalhe(ActionEvent actionEvent) {
     }
 }

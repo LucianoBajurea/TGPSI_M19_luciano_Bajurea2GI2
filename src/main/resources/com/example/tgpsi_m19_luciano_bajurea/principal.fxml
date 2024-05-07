@@ -319,6 +319,7 @@
                                                         <TextField fx:id="fornecedorAdress" layoutX="207.0" layoutY="125.0" promptText="Morada" />
                                                         <TextField fx:id="fornecedorNumTel" layoutX="207.0" layoutY="164.0" promptText="Número de Telemovel" />
                                                         <TextField fx:id="fornecedorEmail" layoutX="444.0" layoutY="22.0" promptText="Email" />
+                                                        <TextField fx:id="fornecedorNIF" layoutX="207.0" layoutY="92.0" promptText="NIF" />
                                                         <Button fx:id="btnFornecedorAdd" layoutX="426.0" layoutY="61.0" mnemonicParsing="false" onAction="#buttonFornAdd" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Adicionar" />
                                                         <Button fx:id="btnFornecedorRemove" layoutX="426.0" layoutY="106.0" mnemonicParsing="false" onAction="#buttonFornRemove" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Remover" />
                                                         <Button fx:id="btnFornecedorEdit" layoutX="547.0" layoutY="61.0" mnemonicParsing="false" onAction="#buttonFornEdit" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Editar" />
@@ -327,7 +328,6 @@
                                                 <Font name="Times New Roman" size="19.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="fornecedorNIF" layoutX="207.0" layoutY="92.0" promptText="NIF" />
                                           <Button fx:id="btnFornecedorDetalhe" layoutX="547.0" layoutY="108.0" mnemonicParsing="false" onAction="#buttonFornDetalhe" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Ver detalhes" />
                                                     </children>
                                                 </AnchorPane>

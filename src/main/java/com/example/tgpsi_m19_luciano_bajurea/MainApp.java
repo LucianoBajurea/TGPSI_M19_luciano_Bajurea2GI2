@@ -20,7 +20,6 @@ public class MainApp extends Application {
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(scene);
         //Definições da Stage
-        primaryStage.setTitle("Gestão de vendas");
         Settings.setPrimaryStage(primaryStage);
         //Abertura da stage
         primaryStage.show();
