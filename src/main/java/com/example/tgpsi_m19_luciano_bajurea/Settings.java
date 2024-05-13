@@ -41,4 +41,54 @@ public class Settings {
     public static void setListProduct(ObservableList<Produto> listProduct) {
         Settings.listProduct = listProduct;
     }
+
+
+    //------------------------------------------------------------------------
+    //PARTE DO FORNECEDOR
+    private static Fornecedor FornecedorEdit;
+
+    public static Fornecedor getFornecedorEdit() {
+        return FornecedorEdit;
+    }
+
+    public static void setFornecedorEdit(Fornecedor fornecedorEdit) {
+        FornecedorEdit = fornecedorEdit;
+    }
+
+    public static ObservableList<Fornecedor> listForn = FXCollections.observableArrayList();
+
+    // Método Getter e Setter da Lista do Produto
+    public static ObservableList<Fornecedor> getListForn() {
+        return listForn;
+    }
+
+    public static void setListForn(ObservableList<Fornecedor> listForn) {
+        Settings.listForn = listForn;
+    }
+
+    //------------------------------------------------------------------------
+    //PARTE DO ClIENTE
+    // Atributo privado da classe Cliente
+    private static Cliente clientEdit;
+
+    // Método Getter e Setter do Cliente
+    public static Cliente getClientEdit() {
+        return clientEdit;
+    }
+
+    public static void setClientEdit(Cliente clientEdit) {
+        Settings.clientEdit = clientEdit;
+    }
+
+    // LISTA DO CLIENTE
+    private static ObservableList<Cliente> listClient = FXCollections.observableArrayList();
+
+    // Método Getter e Setter da lista Cliente
+    public static ObservableList<Cliente> getListClient() {
+        return listClient;
+    }
+    public static void setListClient(ObservableList<Cliente> listClient) {
+        Settings.listClient = listClient;
+    }
 }
+

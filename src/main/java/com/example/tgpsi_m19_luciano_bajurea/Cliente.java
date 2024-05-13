@@ -5,7 +5,7 @@ public class Cliente {
     private int idCliente;
     private String nome;
     private String nif;
-    private String endereco;
+    private String morada;
     private String email;
     private String numTelemovel;
 
@@ -16,21 +16,21 @@ public class Cliente {
 
     //-----------------------------------------------------------
     //Método Contrutor da Classe Cliente com todos os atributos
-    public Cliente(int idCliente, String nome, String nif, String endereco, String email, String numTelemovel) {
+    public Cliente(int idCliente, String nome, String nif, String morada, String email, String numTelemovel) {
         this.idCliente = idCliente;
         this.nome = nome;
         this.nif = nif;
-        this.endereco = endereco;
+        this.morada = morada;
         this.email = email;
         this.numTelemovel = numTelemovel;
     }
 
     //-----------------------------------------------------------
     //Método Contrutor da Classe Cliente com os atributos menos o ID
-    public Cliente(String nome, String nif, String endereco, String email, String numTelemovel) {
+    public Cliente(String nome, String nif, String morada, String email, String numTelemovel) {
         this.nome = nome;
         this.nif = nif;
-        this.endereco = endereco;
+        this.morada = morada;
         this.email = email;
         this.numTelemovel = numTelemovel;
     }
@@ -61,12 +61,12 @@ public class Cliente {
         this.nif = nif;
     }
 
-    public String getEndereco() {
-        return endereco;
+    public String getMorada() {
+        return morada;
     }
 
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
+    public void setMorada(String morada) {
+        this.morada = morada;
     }
 
     public String getEmail() {

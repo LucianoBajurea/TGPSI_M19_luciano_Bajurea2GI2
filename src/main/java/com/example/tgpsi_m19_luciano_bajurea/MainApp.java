@@ -23,6 +23,5 @@ public class MainApp extends Application {
         Settings.setPrimaryStage(primaryStage);
         //Abertura da stage
         primaryStage.show();
-
     }
 }

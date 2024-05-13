@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -9,21 +8,11 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="484.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tgpsi_m19_luciano_bajurea.DetalheProdutoController">
+<AnchorPane fx:id="anchorPaneDetailProduct" prefHeight="484.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tgpsi_m19_luciano_bajurea.DetalheProdutoController">
    <children>
       <AnchorPane prefHeight="540.0" prefWidth="216.0" style="-fx-background-color: #f7d340;">
          <children>
             <Line endX="69.0" layoutX="118.0" layoutY="208.0" startX="-70.0" />
-            <Button layoutX="13.0" layoutY="515.0" mnemonicParsing="false" onAction="#buttonCloseApp" style="-fx-background-radius: 60; -fx-background-color: transparent;" text="Sair">
-               <graphic>
-                  <ImageView fitHeight="17.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@image/sairImagem-removebg-preview.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
             <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="45.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@image/img-removebg-preview.png" />
@@ -70,6 +59,5 @@
       <TextField fx:id="detailCategoryProduct" layoutX="388.0" layoutY="59.0" />
       <TextField fx:id="detailPriceProduct" layoutX="388.0" layoutY="85.0" />
       <TextField fx:id="detailDesProduct" layoutX="388.0" layoutY="114.0" prefHeight="261.0" prefWidth="149.0" />
-      <Button fx:id="btnReturn" layoutX="407.0" layoutY="436.0" mnemonicParsing="false" onAction="#buttonReturn" prefHeight="42.0" prefWidth="111.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Voltar" />
    </children>
 </AnchorPane>

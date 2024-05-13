@@ -52,7 +52,7 @@
                                                 <Font name="System Bold" size="14.0" />
                                             </font>
                                         </Button>
-                                        <Button fx:id="btnFornecedor" layoutX="28.0" layoutY="286.0" mnemonicParsing="false" onAction="#buttonFornecedor" prefHeight="35.0" prefWidth="180.0" style="-fx-background-color: #fcc426; -fx-background-radius: 10;" text="Fornecedor">
+                                        <Button fx:id="btnFornecedor" layoutX="28.0" layoutY="284.0" mnemonicParsing="false" onAction="#buttonFornecedor" prefHeight="35.0" prefWidth="180.0" style="-fx-background-color: #fcc426; -fx-background-radius: 10;" text="Fornecedor">
                                             <font>
                                                 <Font name="System Bold" size="14.0" />
                                             </font>
@@ -149,7 +149,7 @@
                                                 <Button fx:id="btnAdd" layoutX="510.0" layoutY="38.0" mnemonicParsing="false" onAction="#buttonAdd" prefHeight="42.0" prefWidth="111.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Adicionar" />
                                                 <Button fx:id="btnRemove" layoutX="510.0" layoutY="92.0" mnemonicParsing="false" onAction="#buttonRemove" prefHeight="42.0" prefWidth="111.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Remover" />
                                                 <Button fx:id="btnEdit" layoutX="634.0" layoutY="40.0" mnemonicParsing="false" onAction="#buttonEdit" prefHeight="42.0" prefWidth="111.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Editar" />
-                                    <Button fx:id="btnSeeDetailProduct" layoutX="634.0" layoutY="92.0" mnemonicParsing="false" onAction="#buttonSeeDetailProduct" prefHeight="42.0" prefWidth="111.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Ver detalhes" />
+                                                <Button fx:id="btnSeeDetailProduct" layoutX="634.0" layoutY="92.0" mnemonicParsing="false" onAction="#buttonSeeDetailProduct" prefHeight="42.0" prefWidth="111.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Ver detalhes" />
                                             </children>
                                         </AnchorPane>
                                         <Separator layoutX="13.0" layoutY="370.0" prefWidth="851.0" />
@@ -195,7 +195,7 @@
                                         </AnchorPane>
                                     </children>
                                 </AnchorPane>
-                                <AnchorPane fx:id="AnchorPaneClient" prefHeight="600.0" prefWidth="879.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <AnchorPane fx:id="AnchorPaneClient" prefHeight="600.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <AnchorPane layoutX="15.0" layoutY="12.0" prefHeight="349.0" prefWidth="849.0" style="-fx-background-color: fff; -fx-background-radius: 8;">
                                             <effect>
@@ -204,11 +204,12 @@
                                             <children>
                                                 <TableView fx:id="tableViewClient" layoutX="16.0" layoutY="44.0" onMouseClicked="#verClientes" prefHeight="288.0" prefWidth="818.0">
                                                     <columns>
-                                                        <TableColumn fx:id="tableColumnIdClient" prefWidth="75.0" text="ID" />
-                                                        <TableColumn fx:id="tableColumnNameClient" prefWidth="138.0" text="Nome" />
-                                                        <TableColumn fx:id="tableColumnAdressClient" prefWidth="242.0" text="Morada" />
-                                                        <TableColumn fx:id="tableColumnNumberTelClient" prefWidth="202.0" text="Número telemovel" />
-                                                        <TableColumn fx:id="tableColumnEmailCliente" prefWidth="159.0" text="Email" />
+                                                        <TableColumn fx:id="tableColumnIdClient" prefWidth="56.0" text="ID" />
+                                                        <TableColumn fx:id="tableColumnNameClient" prefWidth="140.0" text="Nome" />
+                                                        <TableColumn fx:id="tableColumnNifClient" text="NIF" />
+                                                        <TableColumn fx:id="tableColumnAdressClient" prefWidth="183.0" text="Morada" />
+                                                        <TableColumn fx:id="tableColumnEmailCliente" prefWidth="193.0" text="Email" />
+                                                        <TableColumn fx:id="tableColumnNumTelClient" prefWidth="165.0" text="Número telemovel" />
                                                     </columns>
                                                     <effect>
                                                         <DropShadow />
@@ -222,12 +223,12 @@
                                                 <DropShadow />
                                             </effect>
                                             <children>
-                                                <Label layoutX="86.0" layoutY="44.0" text="ID do cliente:">
+                                                <Label layoutX="85.0" layoutY="16.0" text="ID do cliente:">
                                                     <font>
                                                         <Font name="Times New Roman" size="18.0" />
                                                     </font>
                                                 </Label>
-                                                <Label layoutX="60.0" layoutY="73.0" text="Nome do cliente:">
+                                                <Label layoutX="59.0" layoutY="45.0" text="Nome do cliente:">
                                                     <font>
                                                         <Font name="Times New Roman" size="18.0" />
                                                     </font>
@@ -242,8 +243,8 @@
                                                         <Font name="Times New Roman" size="18.0" />
                                                     </font>
                                                 </Label>
-                                                <TextField fx:id="clientId" layoutX="207.0" layoutY="42.0" promptText="Id do cliente" />
-                                                <TextField fx:id="clientName" layoutX="207.0" layoutY="71.0" promptText="Nome do Cliente" />
+                                                <TextField fx:id="clientId" layoutX="206.0" layoutY="14.0" promptText="Id do cliente" />
+                                                <TextField fx:id="clientName" layoutX="206.0" layoutY="43.0" promptText="Nome do Cliente" />
                                                 <TextField fx:id="clientNumTel" layoutX="207.0" layoutY="129.0" promptText="Número de telemovel" />
                                                 <TextField fx:id="clientEmail" layoutX="207.0" layoutY="158.0" promptText="Email" />
                                                 <Button fx:id="btnAddClient" layoutX="486.0" layoutY="53.0" minHeight="36.0" mnemonicParsing="false" onAction="#buttonAddClient" prefHeight="36.0" prefWidth="114.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Adicionar" />
@@ -255,12 +256,18 @@
                                                     </font>
                                                 </Label>
                                                 <TextField fx:id="clientAdress" layoutX="207.0" layoutY="102.0" promptText="Morada do Cliente" />
+                                    <Label layoutX="148.0" layoutY="77.0" text="NIF:">
+                                       <font>
+                                          <Font name="Times New Roman" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="clientNIF" layoutX="206.0" layoutY="73.0" promptText="NIF" />
                                             </children>
                                         </AnchorPane>
                               <Separator layoutX="15.0" layoutY="371.0" prefWidth="851.0" />
                                     </children>
                                 </AnchorPane>
-                                <AnchorPane fx:id="AnchorPaneFornecedor" prefHeight="600.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <AnchorPane fx:id="AnchorPaneFornecedor" prefHeight="600.0" prefWidth="879.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <AnchorPane prefHeight="600.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
@@ -273,9 +280,10 @@
                                                             <columns>
                                                                 <TableColumn fx:id="tableColumnIdForn" prefWidth="75.0" text="Id" />
                                                                 <TableColumn fx:id="tableColumnNameForn" prefWidth="164.0" text="Nome" />
+                                                                <TableColumn fx:id="tableColumnNifForn" prefWidth="76.0" text="Nif" />
                                                                 <TableColumn fx:id="tableColumnAdressForn" prefWidth="239.0" text="Morada" />
                                                                 <TableColumn fx:id="tableColumnNumTelForn" prefWidth="141.0" text="Número telemovel" />
-                                                                <TableColumn fx:id="tableColumnEmailForn" prefWidth="198.0" text="Email" />
+                                                                <TableColumn fx:id="tableColumnEmailForn" prefWidth="122.0" text="Email" />
                                                             </columns>
                                                             <effect>
                                                                 <DropShadow />
@@ -318,8 +326,7 @@
                                                         <TextField fx:id="fornecedorName" layoutX="207.0" layoutY="55.0" promptText="Nome" />
                                                         <TextField fx:id="fornecedorAdress" layoutX="207.0" layoutY="125.0" promptText="Morada" />
                                                         <TextField fx:id="fornecedorNumTel" layoutX="207.0" layoutY="164.0" promptText="Número de Telemovel" />
-                                                        <TextField fx:id="fornecedorEmail" layoutX="444.0" layoutY="22.0" promptText="Email" />
-                                                        <TextField fx:id="fornecedorNIF" layoutX="207.0" layoutY="92.0" promptText="NIF" />
+                                                        <TextField fx:id="fornecedorEmail" layoutX="444.0" layoutY="22.0" prefHeight="25.0" prefWidth="231.0" promptText="Email" />
                                                         <Button fx:id="btnFornecedorAdd" layoutX="426.0" layoutY="61.0" mnemonicParsing="false" onAction="#buttonFornAdd" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Adicionar" />
                                                         <Button fx:id="btnFornecedorRemove" layoutX="426.0" layoutY="106.0" mnemonicParsing="false" onAction="#buttonFornRemove" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Remover" />
                                                         <Button fx:id="btnFornecedorEdit" layoutX="547.0" layoutY="61.0" mnemonicParsing="false" onAction="#buttonFornEdit" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Editar" />
@@ -328,7 +335,8 @@
                                                 <Font name="Times New Roman" size="19.0" />
                                              </font>
                                           </Label>
-                                          <Button fx:id="btnFornecedorDetalhe" layoutX="547.0" layoutY="108.0" mnemonicParsing="false" onAction="#buttonFornDetalhe" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Ver detalhes" />
+                                          <TextField fx:id="fornecedorNIF" layoutX="207.0" layoutY="92.0" promptText="NIF" />
+                                          <Button fx:id="btnDetailForn" layoutX="547.0" layoutY="108.0" mnemonicParsing="false" onAction="#buttonDetailForn" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Ver detalhes" />
                                                     </children>
                                                 </AnchorPane>
                                     <Separator layoutX="15.0" layoutY="365.0" prefWidth="851.0" />
