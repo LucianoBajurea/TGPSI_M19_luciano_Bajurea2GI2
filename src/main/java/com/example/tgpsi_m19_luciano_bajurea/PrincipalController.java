@@ -266,7 +266,7 @@ public class PrincipalController implements Initializable {
                         if (buttonType == buttonSim) {
                             // Tenta adicionar o novo produto ao banco de dados
                             try {
-                                String sql = "INSERT INTO produto (idProduto, nomeProduto, descricaoProduto, precoProduto) VALUES (?, ?, ?, ?)";
+                                String sql = "INSERT INTO produto (idProduto, nomeProduto, precoProduto, descricaoProduto) VALUES (?, ?, ?, ?)";
                                 PreparedStatement stmt = conn.prepareStatement(sql);
                                 stmt.setInt(1, newId);
                                 stmt.setString(2, newName);
