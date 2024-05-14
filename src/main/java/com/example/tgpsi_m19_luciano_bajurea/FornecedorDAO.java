@@ -25,7 +25,7 @@ public class FornecedorDAO {
                 String nif = rs.getString("nif");
                 String endereco = rs.getString("morada");
                 String email = rs.getString("email");
-                String numTel = rs.getString("telemovel");
+                String numTel = rs.getString("numTelemovel");
                 Fornecedor f = new Fornecedor(idFornecedor, nome, nif, email, endereco, numTel);
                 fornecedor.add(f);
             }
@@ -35,5 +35,25 @@ public class FornecedorDAO {
             ConexaoBD.closeDB(stmt, rs);
         }
         return fornecedor;
+    }
+
+    public static void removerForn(int id){
+        Connection conn = ConexaoBD.openDB();
+        PreparedStatement stmt = null;
+
+        String sql = "DELETE FROM fornecedor WHERE idFornecedor = ?;";
+
+        try{
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.execute();
+            System.out.println("Fornecedor eliminado com sucesso");
+        }
+        catch (SQLException ex) {
+            System.out.println("Erro ao eliminar o Fornecedor: "+ex);
+        }
+        finally {
+            ConexaoBD.closeDB(stmt);
+        }
     }
 }

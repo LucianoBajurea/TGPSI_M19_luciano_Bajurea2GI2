@@ -19,7 +19,7 @@ public class MainApp extends Application {
         Scene scene = new Scene(fxmlLoader.load());
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(scene);
-        //Definições da Stage
+        //Definições da Stage<
         Settings.setPrimaryStage(primaryStage);
         //Abertura da stage
         primaryStage.show();
