@@ -21,13 +21,13 @@ public class ProdutoDAO {
             while (rs.next()) {
                 int idProduto = rs.getInt("idProduto");
                 String nomeProduto = rs.getString("nomeProduto");
-                double preco = rs.getDouble("preco");
+                double preco = rs.getDouble("precoProduto");
                 String descricao = rs.getString("descricaoProduto");
                 Produto p = new Produto(idProduto, nomeProduto, preco, descricao);
                 produto.add(p);
             }
         } catch (SQLException ex) {
-            System.out.println("Erro ao listar os Produtos: " + ex);
+            System.out.println("Erro ao listar o Produto: " + ex);
         } finally {
             ConexaoBD.closeDB(stmt, rs);
         }

@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ClienteDAO {
-    public static ObservableList<Cliente> listClient() {
+    public static ObservableList<Cliente> listCliente() {
         Connection conn = ConexaoBD.openDB();
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -22,14 +22,14 @@ public class ClienteDAO {
                 int idCliente = rs.getInt("idCliente");
                 String nome = rs.getString("nome");
                 String nif = rs.getString("nif");
-                String endereco = rs.getString("endereco");
+                String morada = rs.getString("morada");
                 String email = rs.getString("email");
-                String numTel = rs.getString("telemovel");
-                Cliente c = new Cliente(idCliente, nome, nif, email, endereco, numTel);
+                String numTel = rs.getString("numTelemovel");
+                Cliente c = new Cliente(idCliente, nome, nif, email, morada, numTel);
                 cliente.add(c);
             }
         } catch (SQLException ex) {
-            System.out.println("Erro ao listar os Fornecedores: " + ex);
+            System.out.println("Erro ao listar o Cliente: " + ex);
         } finally {
             ConexaoBD.closeDB(stmt, rs);
         }

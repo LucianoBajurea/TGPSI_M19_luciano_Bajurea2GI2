@@ -23,14 +23,14 @@ public class FornecedorDAO {
                 int idFornecedor = rs.getInt("idFornecedor");
                 String nome = rs.getString("nome");
                 String nif = rs.getString("nif");
-                String endereco = rs.getString("morada");
+                String morada = rs.getString("morada");
                 String email = rs.getString("email");
                 String numTel = rs.getString("numTelemovel");
-                Fornecedor f = new Fornecedor(idFornecedor, nome, nif, email, endereco, numTel);
+                Fornecedor f = new Fornecedor(idFornecedor, nome, nif, email, morada, numTel);
                 fornecedor.add(f);
             }
         } catch (SQLException ex) {
-            System.out.println("Erro ao listar os Fornecedores: " + ex);
+            System.out.println("Erro ao listar o Fornecedor: " + ex);
         } finally {
             ConexaoBD.closeDB(stmt, rs);
         }

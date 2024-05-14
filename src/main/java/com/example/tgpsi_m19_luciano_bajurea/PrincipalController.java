@@ -32,7 +32,10 @@ public class PrincipalController implements Initializable {
     public Button btnSeeDetailProduct;
     public Button btnFornecedor;
     public TextField clientSearch;
-    public TextField clientNIF;
+    @FXML
+    private TextField clientNIF;
+    @FXML
+    private AnchorPane pesquisarCliente;
     @FXML
     private AnchorPane AnchorPaneMain;
     @FXML
@@ -236,7 +239,7 @@ public class PrincipalController implements Initializable {
 
     public void buttonAdd(ActionEvent actionEvent) {
         // Verifica se algum dos campos essenciais está vazio
-        if (productId.getText().isEmpty() || productName.getText().isEmpty() || productCategoria.getSelectionModel().getSelectedItem() == null || productPrice.getText().isEmpty()) {
+        if (productName.getText().isEmpty() || productCategoria.getSelectionModel().getSelectedItem() == null || productPrice.getText().isEmpty()) {
             // Mostra um alerta de erro se algum campo estiver vazio
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO");
@@ -248,7 +251,6 @@ public class PrincipalController implements Initializable {
                 Connection conn = ConexaoBD.openDB();
                 if (conn != null) {
                     // Se tudo estiver correto, obtém os detalhes do novo produto
-                    int newId = Integer.parseInt(productId.getText());
                     String newName = productName.getText();
                     double newPrice = Double.parseDouble(productPrice.getText());
                     String newCategoria = String.valueOf(productCategoria.getSelectionModel().getSelectedItem());
@@ -267,13 +269,19 @@ public class PrincipalController implements Initializable {
                         if (buttonType == buttonSim) {
                             // Tenta adicionar o novo produto ao banco de dados
                             try {
-                                String sql = "INSERT INTO produto (idProduto, nomeProduto, precoProduto, descricaoProduto) VALUES (?, ?, ?, ?)";
-                                PreparedStatement stmt = conn.prepareStatement(sql);
-                                stmt.setInt(1, newId);
-                                stmt.setString(2, newName);
-                                stmt.setDouble(3, newPrice);
-                                stmt.setString(4, newCategoria);
+                                String sql = "INSERT INTO produto (nomeProduto, precoProduto, descricaoProduto) VALUES (?, ?, ?)";
+                                PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                                stmt.setString(1, newName);
+                                stmt.setDouble(2, newPrice);
+                                stmt.setString(3, newCategoria);
                                 stmt.executeUpdate();
+
+                                // Recupera o ID gerado automaticamente
+                                ResultSet generatedKeys = stmt.getGeneratedKeys();
+                                int newId = 0;
+                                if (generatedKeys.next()) {
+                                    newId = generatedKeys.getInt(1);
+                                }
 
                                 // Mostra um alerta informativo sobre a adição bem-sucedida
                                 Alert alertAddProduct = new Alert(Alert.AlertType.INFORMATION);
@@ -282,12 +290,11 @@ public class PrincipalController implements Initializable {
                                 alertAddProduct.setContentText("Produto inserido com sucesso!");
                                 alertAddProduct.showAndWait();
 
-                                // Adiciona o fornecedor à tabela
+                                // Adiciona o produto à tabela
                                 Produto produto = new Produto(newId, newName, newPrice, newCategoria);
                                 tableViewProduct.getItems().add(produto);
 
                                 // Limpa os campos após a adição bem-sucedida
-                                productId.clear();
                                 productName.clear();
                                 productPrice.clear();
                                 productCategoria.getSelectionModel().clearSelection();
@@ -310,13 +317,6 @@ public class PrincipalController implements Initializable {
                     alert.setContentText("Não foi possível conectar ao banco de dados.");
                     alert.showAndWait();
                 }
-            } catch (NumberFormatException e) {
-                // Mostra um alerta de erro se houver um problema com a conversão de tipos de dados
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("ERRO");
-                alert.setHeaderText(null);
-                alert.setContentText("Certifique-se de que o ID é um número e que o preço está em um formato válido.");
-                alert.showAndWait();
             } finally {
                 ConexaoBD.closeDB(); // Fecha a conexão com o banco de dados após o uso
             }
@@ -387,6 +387,9 @@ public class PrincipalController implements Initializable {
         clientEmail.setText(String.valueOf(ClientDataVer.getEmail()));
     }
 
+    public void clientSearch(KeyEvent keyEvent) {
+
+    }
     public void buttonAddClient(ActionEvent actionEvent) {
         // Verifica se algum dos campos essenciais está vazio
         if (clientName.getText().isEmpty() || clientNIF.getText().isEmpty() || clientAdress.getText().isEmpty() || clientEmail.getText().isEmpty() || clientNumTel.getText().isEmpty()) {
@@ -590,8 +593,9 @@ public class PrincipalController implements Initializable {
         tableColumnEmailCliente.setCellValueFactory(new PropertyValueFactory<Cliente, String>("email"));
         tableColumnNumTelClient.setCellValueFactory(new PropertyValueFactory<Cliente, String>("numTelemovel"));
 
-        tableViewClient.setItems(Settings.getListClient());
+        tableViewClient.setItems(ClienteDAO.listCliente());
     }
+
 
     //----------------------------------------------------------------------------------------
     // FORNECEDOR
@@ -828,14 +832,7 @@ public class PrincipalController implements Initializable {
                     alert.setHeaderText(null);
                     alert.setContentText("Não foi possível ligar a base de dados.");
                     alert.showAndWait();
-                }
-            } catch (NumberFormatException e) {
-                // Exibe um alerta de erro se houver um problema com a conversão de tipos de dados
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("ERRO");
-                alert.setHeaderText(null);
-                alert.setContentText("Certifique-se de que o ID é um número válido.");
-                alert.showAndWait();
+                };
             } finally {
                 ConexaoBD.closeDB(); // Fecha a conexão com o banco de dados após o uso
             }
@@ -870,7 +867,6 @@ public class PrincipalController implements Initializable {
         tableColumnEmailForn.setCellValueFactory(new PropertyValueFactory<Fornecedor, String>("email"));
         tableColumnNumTelForn.setCellValueFactory(new PropertyValueFactory<Fornecedor, String>("numTelemovel"));
 
-        System.out.println(Settings.getListForn().size());
         tableViewFornecedor.setItems(FornecedorDAO.listFornecedor());
     }
 }
