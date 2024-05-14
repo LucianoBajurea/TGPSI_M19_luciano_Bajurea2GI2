@@ -2,6 +2,8 @@ package com.example.tgpsi_m19_luciano_bajurea;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -617,6 +619,42 @@ public class PrincipalController implements Initializable {
     }
 
     public void pesquisarFornecedor(KeyEvent keyEvent) {
+
+        // Cria um objeto FilteredList para filtrar a lista
+        FilteredList<Fornecedor> filter = new FilteredList<>(Settings.listForn, e -> true);
+
+        // Adiciona um listener ao texto da barra de pesquisa
+        FornecedorSearch.textProperty().addListener((Observable, oldValue, newValue) ->{
+
+            filter.setPredicate(predicateClient ->{
+                // Verifica se o novo valor da pesquisa é nulo ou vazio
+                if(newValue == null && newValue.isEmpty()){
+                    return true;
+                }
+                // Converte o valor da pesquisa para minúsculas
+                String pesquisarForn = newValue.toLowerCase();
+
+                // Verifica se o ID do cliente contém o valor da pesquisa
+                if (String.valueOf(predicateClient.getIdFornecedor()).contains(pesquisarForn)){
+                    return true;
+                    // Verifica se o nome do cliente contém o valor da pesquisa
+                }else if (predicateClient.getNome().toLowerCase().contains(pesquisarForn)) {
+                    return true;
+                    // Verifica se o telefone do cliente contém o valor da pesquisa
+                } else if (predicateClient.getNumTelemovel().toLowerCase().contains(pesquisarForn)) {
+                    return true;
+                }
+                // Retorna falso se nenhum critério for atendido
+                return false;
+            });
+        });
+
+        // Cria uma lista ordenada com base no filtro
+        SortedList<Fornecedor> sortList =  new SortedList<>(filter);
+
+        // Atualiza a tabela de clientes com a lista filtrada e ordenada
+        sortList.comparatorProperty().bind(tableViewFornecedor.comparatorProperty());
+        tableViewFornecedor.setItems(sortList);
     }
 
     public void buttonFornAdd(ActionEvent actionEvent) {
@@ -704,13 +742,6 @@ public class PrincipalController implements Initializable {
                     alert.setContentText("Não foi possível ligar à base de dados.");
                     alert.showAndWait();
                 }
-            } catch (NumberFormatException e) {
-                // Exibe um alerta de erro se houver um problema com a conversão de tipos de dados
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("ERRO");
-                alert.setHeaderText(null);
-                alert.setContentText("Certifique-se de que todos os campos estão no formato correto.");
-                alert.showAndWait();
             } finally {
                 ConexaoBD.closeDB(); // Fecha a conexão com o banco de dados após o uso
             }
