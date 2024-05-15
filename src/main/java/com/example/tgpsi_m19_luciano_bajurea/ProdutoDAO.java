@@ -33,4 +33,24 @@ public class ProdutoDAO {
         }
         return produto;
     }
+
+    public static void removerProduto(int idProduto){
+        Connection conn = ConexaoBD.openDB();
+        PreparedStatement stmt = null;
+
+        String sql = "DELETE FROM produto WHERE idProduto = ?;";
+
+        try{
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, idProduto);
+            stmt.executeUpdate();
+            System.out.println("Produto eliminado com sucesso");
+        }
+        catch (SQLException ex) {
+            System.out.println("Erro ao eliminar o Produto: "+ex);
+        }
+        finally {
+            ConexaoBD.closeDB(stmt);
+        }
+    }
 }

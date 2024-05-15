@@ -328,7 +328,7 @@ public class PrincipalController implements Initializable {
     }
 
     public void buttonRemove(ActionEvent actionEvent)  {
-        if (productName.getText().isEmpty() || productCategoria.getSelectionModel().getSelectedItem() == null || productPrice.getText().isEmpty()) {
+        if (productName.getText().isEmpty()  || productPrice.getText().isEmpty()|| productCategoria.getSelectionModel().getSelectedItem() == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO");
             alert.setHeaderText("Nenhum Produto selecionado!");
@@ -339,8 +339,8 @@ public class PrincipalController implements Initializable {
             Connection conn = ConexaoBD.openDB();
             if (conn != null) {
                 String newName = productName.getText();
-                double newPrice = Double.parseDouble(productPrice.getText());
                 String newCategoria = String.valueOf(productCategoria.getSelectionModel().getSelectedItem());
+                double newPrice = Double.parseDouble(productPrice.getText());
 
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("CONFIRMAR");
@@ -352,7 +352,7 @@ public class PrincipalController implements Initializable {
 
                 Optional<ButtonType> choose = alert.showAndWait();
                 if (choose.isPresent() && choose.get() == buttonSim) {
-                    int id = Integer.parseInt(clientId.getText());
+                    int id = Integer.parseInt(productId.getText());
                     ProdutoDAO.removerProduto(id);
                     //System.out.println(Settings.getListForn().size());
                     Produto produtoRemovido = (Produto) tableViewProduct.getSelectionModel().getSelectedItem();
