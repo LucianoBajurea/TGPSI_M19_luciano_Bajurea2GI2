@@ -29,9 +29,12 @@ import static com.example.tgpsi_m19_luciano_bajurea.ConexaoBD.*;
 
 public class PrincipalController implements Initializable {
 
-    public Button btnSeeDetailProduct;
-    public Button btnFornecedor;
-    public TextField clientSearch;
+    @FXML
+    private Button btnSeeDetailProduct;
+    @FXML
+    private Button btnFornecedor;
+    @FXML
+    private TextField clientSearch;
     @FXML
     private TextField clientNIF;
     @FXML
@@ -151,6 +154,7 @@ public class PrincipalController implements Initializable {
         InventoryTypeProduct();
         clienteListar();
         ProductListar();
+
     }
 
     public void buttonOnClient(ActionEvent actionEvent) {
@@ -323,12 +327,60 @@ public class PrincipalController implements Initializable {
         }
     }
 
-    public void buttonRemove(ActionEvent actionEvent) throws Exception {
+    public void buttonRemove(ActionEvent actionEvent)  {
+        if (productName.getText().isEmpty() || productCategoria.getSelectionModel().getSelectedItem() == null || productPrice.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERRO");
+            alert.setHeaderText("Nenhum Produto selecionado!");
+            alert.setContentText("Selecione um Produto para remover.");
+            alert.showAndWait();
+        } else {
+            // Obtenha a conexão com o banco de dados
+            Connection conn = ConexaoBD.openDB();
+            if (conn != null) {
+                String newName = productName.getText();
+                double newPrice = Double.parseDouble(productPrice.getText());
+                String newCategoria = String.valueOf(productCategoria.getSelectionModel().getSelectedItem());
 
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("CONFIRMAR");
+                alert.setHeaderText("Deseja mesmo remover este Produto?");
+                alert.setContentText("Nome: " + newName + "\nPreço: " + newPrice + "\nCategoria: " + newCategoria + "\nPreço" + newPrice + "\nDeseja mesmo adicionar?");
+                ButtonType buttonSim = new ButtonType("Sim");
+                ButtonType buttonNao = new ButtonType("Não");
+                alert.getButtonTypes().setAll(buttonSim, buttonNao);
+
+                Optional<ButtonType> choose = alert.showAndWait();
+                if (choose.isPresent() && choose.get() == buttonSim) {
+                    int id = Integer.parseInt(clientId.getText());
+                    ProdutoDAO.removerProduto(id);
+                    //System.out.println(Settings.getListForn().size());
+                    Produto produtoRemovido = (Produto) tableViewProduct.getSelectionModel().getSelectedItem();
+                    tableViewProduct.getItems().remove(produtoRemovido);
+
+                    // Limpa os campos após a remoção
+                    productName.clear();
+                    productPrice.clear();
+                    productCategoria.getSelectionModel().clearSelection();
+
+                    // Mostrar alerta de remoção bem-sucedida
+                    Alert alertRmProduto = new Alert(Alert.AlertType.INFORMATION);
+                    alertRmProduto.setTitle("INFORMAÇÃO");
+                    alertRmProduto.setHeaderText(null);
+                    alertRmProduto.setContentText("Produto removido com sucesso!");
+                    alertRmProduto.showAndWait();
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERRO");
+                alert.setHeaderText(null);
+                alert.setContentText("Não foi possível conectar à base de dados.");
+                alert.showAndWait();
+            }
+        }
     }
 
     public void buttonEdit(ActionEvent actionEvent) {
-
     }
 
     public void ProductListar() {
@@ -341,7 +393,6 @@ public class PrincipalController implements Initializable {
         Settings.getListProduct().clear();
         // Associação da Obse0rvableList à TableView. A partir daqui, tudo se faz na ObservableList.
         tableViewProduct.setItems(ProdutoDAO.listProduct());
-
 
     }
 
@@ -368,7 +419,7 @@ public class PrincipalController implements Initializable {
         // Obtém os dados do Fornecedor selecionado na tabela
         Cliente ClientDataVer = (Cliente) tableViewClient.getSelectionModel().getSelectedItem();
 
-        // Mostra o ID do Cliente no campo de texto correspondente
+        // Mostra o nome do Cliente no campo de texto correspondente
         clientId.setText(String.valueOf(ClientDataVer.getIdCliente()));
 
         // Mostra o nome do Cliente no campo de texto correspondente
@@ -387,8 +438,42 @@ public class PrincipalController implements Initializable {
         clientEmail.setText(String.valueOf(ClientDataVer.getEmail()));
     }
 
-    public void clientSearch(KeyEvent keyEvent) {
+    public void pesquisarCliente(KeyEvent keyEvent) {
+        // Cria um objeto FilteredList para filtrar a lista
+        FilteredList<Cliente> filter = new FilteredList<>(Settings.listClient, e -> true);
 
+        // Adiciona um listener ao texto da barra de pesquisa
+        clientSearch.textProperty().addListener((Observable, oldValue, newValue) ->{
+
+            filter.setPredicate(predicateClient ->{
+                // Verifica se o novo valor da pesquisa é nulo ou vazio
+                if(newValue == null && newValue.isEmpty()){
+                    return true;
+                }
+                // Converte o valor da pesquisa para minúsculas
+                String pesquisarClient = newValue.toLowerCase();
+
+                // Verifica se o ID do cliente contém o valor da pesquisa
+                if (String.valueOf(predicateClient.getIdCliente()).contains(pesquisarClient)){
+                    return true;
+                    // Verifica se o nome do cliente contém o valor da pesquisa
+                }else if (predicateClient.getNome().toLowerCase().contains(pesquisarClient)) {
+                    return true;
+                    // Verifica se o telefone do cliente contém o valor da pesquisa
+                } else if (predicateClient.getNumTelemovel().toLowerCase().contains(pesquisarClient)) {
+                    return true;
+                }
+                // Retorna falso se nenhum critério for atendido
+                return false;
+            });
+        });
+
+        // Cria uma lista ordenada com base no filtro
+        SortedList<Cliente> sortList =  new SortedList<>(filter);
+
+        // Atualiza a tabela de clientes com a lista filtrada e ordenada
+        sortList.comparatorProperty().bind(tableViewClient.comparatorProperty());
+        tableViewClient.setItems(sortList);
     }
     public void buttonAddClient(ActionEvent actionEvent) {
         // Verifica se algum dos campos essenciais está vazio
@@ -489,94 +574,59 @@ public class PrincipalController implements Initializable {
     }
 
     public void buttonRemoveClient(ActionEvent actionEvent) {
-        // Verifica se algum dos campos obrigatórios está vazio
         if (clientName.getText().isEmpty() || clientNIF.getText().isEmpty() || clientAdress.getText().isEmpty() || clientEmail.getText().isEmpty() || clientNumTel.getText().isEmpty()) {
-            // Exibe um alerta de erro se algum campo estiver vazio
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO");
-            alert.setHeaderText("Nao selecionou nenhum Cliente, por favor selecione de novo!!!");
-            alert.setContentText("Clique no botão para continuar");
+            alert.setHeaderText("Nenhum Cliente selecionado!");
+            alert.setContentText("Selecione um fornecedor para remover.");
             alert.showAndWait();
         } else {
-            try {
-                Connection conn = ConexaoBD.openDB();
-                if (conn != null) {
-                    // Se tudo estiver correto, obtém os detalhes do fornecedor a ser removido
-                    int newId = Integer.parseInt(clientId.getText());
-                    String newName = clientName.getText();
-                    String newNIF = clientNIF.getText();
-                    String newAdress = clientAdress.getText();
-                    String newEmail = clientEmail.getText();
-                    String newNumTel = clientNumTel.getText();
+            // Obtenha a conexão com o banco de dados
+            Connection conn = ConexaoBD.openDB();
+            if (conn != null) {
+                String newName = clientName.getText();
+                String newNIF = clientNIF.getText();
+                String newAdress = clientAdress.getText();
+                String newEmail = clientEmail.getText();
+                String newNumTel = clientNumTel.getText();
 
-                    // Cria um alerta de confirmação para a remoção do fornecedor
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("CONFIRMAR");
-                    alert.setHeaderText("Deseja mesmo remover este Cliente?");
-                    alert.setContentText("Nome: " + newName + "\nNIF: " + newNIF + "\nMorada: " + newAdress + "\nEmail:" + newEmail + "\nNúmero de Telemovel: " + newNumTel + "\nDeseja mesmo remover?");
-                    ButtonType buttonSim = new ButtonType("Sim");
-                    ButtonType buttonNao = new ButtonType("Não");
-                    alert.getButtonTypes().setAll(buttonSim, buttonNao);
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("CONFIRMAR");
+                alert.setHeaderText("Deseja mesmo remover este cliente?");
+                alert.setContentText("Nome: " + newName + "\nNIF: " + newNIF + "\nMorada: " + newAdress + "\nEmail:" + newEmail + "\nNúmero de Telemovel: " + newNumTel + "\nDeseja mesmo remover?");
+                ButtonType buttonSim = new ButtonType("Sim");
+                ButtonType buttonNao = new ButtonType("Não");
+                alert.getButtonTypes().setAll(buttonSim, buttonNao);
 
-                    // Mostra o alerta de confirmação e aguarda a escolha do utilizador
-                    Optional<ButtonType> choose = alert.showAndWait();
-                    if (choose.isPresent() && choose.get() == buttonSim) {
-                        // Remove o fornecedor da base de dados
-                        try {
-                            String sql = "DELETE FROM cliente WHERE idCliente=?";
-                            PreparedStatement stmt = conn.prepareStatement(sql);
-                            stmt.setInt(1, newId);
-                            int rowsAffected = stmt.executeUpdate();
+                Optional<ButtonType> choose = alert.showAndWait();
+                if (choose.isPresent() && choose.get() == buttonSim) {
+                    int id = Integer.parseInt(clientId.getText());
+                    ClienteDAO.removerClient(id);
+                    //System.out.println(Settings.getListForn().size());
+                    Cliente clienteRemovido = (Cliente) tableViewClient.getSelectionModel().getSelectedItem();
+                    tableViewClient.getItems().remove(clienteRemovido);
 
-                            if (rowsAffected > 0) {
-                                // Exibe um alerta informativo sobre a remoção bem-sucedida
-                                Alert alertRmFornecedor = new Alert(Alert.AlertType.INFORMATION);
-                                alertRmFornecedor.setTitle("INFORMAÇÃO");
-                                alertRmFornecedor.setHeaderText(null);
-                                alertRmFornecedor.setContentText("Cliente removido com sucesso!");
-                                alertRmFornecedor.showAndWait();
+                    // Limpeza dos campos após a remoção
+                    clientId.clear();
+                    clientName.clear();
+                    clientNIF.clear();
+                    clientAdress.clear();
+                    clientEmail.clear();
+                    clientNumTel.clear();
 
-                                // Limpa os campos após a remoção bem-sucedida
-                                clientId.clear();
-                                clientName.clear();
-                                clientNIF.clear();
-                                clientAdress.clear();
-                                clientEmail.clear();
-                                clientNumTel.clear();
-                            } else {
-                                // Exibe um alerta informando que o fornecedor não foi encontrado
-                                Alert alertNoFornecedor = new Alert(Alert.AlertType.WARNING);
-                                alertNoFornecedor.setTitle("AVISO");
-                                alertNoFornecedor.setHeaderText(null);
-                                alertNoFornecedor.setContentText("Cliente não encontrado com o ID fornecido.");
-                                alertNoFornecedor.showAndWait();
-                            }
-                        } catch (SQLException e) {
-                            // Exibe um alerta de erro se ocorrer um erro ao remover o fornecedor do banco de dados
-                            Alert alertError = new Alert(Alert.AlertType.ERROR);
-                            alertError.setTitle("ERRO");
-                            alertError.setHeaderText(null);
-                            alertError.setContentText("Erro ao remover o fornecedor: " + e.getMessage());
-                            alertError.showAndWait();
-                        }
-                    }
-                } else {
-                    // Exibe um alerta de erro se não for possível abrir a conexão com o banco de dados
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("ERRO");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Não foi possível ligar a base de dados.");
-                    alert.showAndWait();
+                    // Mostrar alerta de remoção bem-sucedida
+                    Alert alertRmClient = new Alert(Alert.AlertType.INFORMATION);
+                    alertRmClient.setTitle("INFORMAÇÃO");
+                    alertRmClient.setHeaderText(null);
+                    alertRmClient.setContentText("Cliente removido com sucesso!");
+                    alertRmClient.showAndWait();
                 }
-            } catch (NumberFormatException e) {
-                // Exibe um alerta de erro se houver um problema com a conversão de tipos de dados
+            } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("ERRO");
                 alert.setHeaderText(null);
-                alert.setContentText("Certifique-se de que o ID é um número válido.");
+                alert.setContentText("Não foi possível conectar à base de dados.");
                 alert.showAndWait();
-            } finally {
-                ConexaoBD.closeDB(); // Fecha a conexão com o banco de dados após o uso
             }
         }
     }
@@ -603,7 +653,7 @@ public class PrincipalController implements Initializable {
         // Obtém os dados do Fornecedor selecionado na tabela
         Fornecedor FornDataVer = (Fornecedor) tableViewFornecedor.getSelectionModel().getSelectedItem();
 
-        // Define o ID do Fornecedor no campo de texto correspondente
+        // Mostra o nome do Cliente no campo de texto correspondente
         fornecedorId.setText(String.valueOf(FornDataVer.getIdFornecedor()));
 
         // Define o nome do Fornecedor no campo de texto correspondente
@@ -623,7 +673,6 @@ public class PrincipalController implements Initializable {
     }
 
     public void pesquisarFornecedor(KeyEvent keyEvent) {
-
         // Cria um objeto FilteredList para filtrar a lista
         FilteredList<Fornecedor> filter = new FilteredList<>(Settings.listForn, e -> true);
 
@@ -752,92 +801,64 @@ public class PrincipalController implements Initializable {
         }
     }
 
-    public void buttonFornRemove(ActionEvent actionEvent) {
-        // Verifica se algum dos campos obrigatórios está vazio
-        if (fornecedorId.getText().isEmpty() || fornecedorName.getText().isEmpty() || fornecedorNIF.getText().isEmpty() || fornecedorAdress.getText().isEmpty() || fornecedorEmail.getText().isEmpty() || fornecedorNumTel.getText().isEmpty()) {
-            // Exibe um alerta de erro se algum campo estiver vazio
+    public void buttonFornRemove(ActionEvent actionEvent) throws SQLException {
+        if (fornecedorName.getText().isEmpty() || fornecedorNIF.getText().isEmpty() || fornecedorAdress.getText().isEmpty() || fornecedorEmail.getText().isEmpty() || fornecedorNumTel.getText().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO");
-            alert.setHeaderText("Nao selecionou nenhum Cliente, por favor selecione de novo!!!");
-            alert.setContentText("Clique no botão para continuar");
+            alert.setHeaderText("Nenhum fornecedor selecionado!");
+            alert.setContentText("Selecione um fornecedor para remover.");
             alert.showAndWait();
         } else {
-            try {
-                Connection conn = ConexaoBD.openDB();
-                if (conn != null) {
-                    // Se tudo estiver correto, obtém os detalhes do fornecedor a ser removido
-                    int newId = Integer.parseInt(fornecedorId.getText());
-                    String newName = fornecedorName.getText();
-                    String newNIF = fornecedorNIF.getText();
-                    String newAdress = fornecedorAdress.getText();
-                    String newEmail = fornecedorEmail.getText();
-                    String newNumTel = fornecedorNumTel.getText();
+            // Obtenha a conexão com o banco de dados
+            Connection conn = ConexaoBD.openDB();
+            if (conn != null) {
+                String newName = fornecedorName.getText();
+                String newNIF = fornecedorNIF.getText();
+                String newAdress = fornecedorAdress.getText();
+                String newEmail = fornecedorEmail.getText();
+                String newNumTel = fornecedorNumTel.getText();
 
-                    // Cria um alerta de confirmação para a remoção do fornecedor
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("CONFIRMAR");
-                    alert.setHeaderText("Deseja mesmo remover este fornecedor?");
-                    alert.setContentText("Nome: " + newName + "\nNIF: " + newNIF + "\nMorada: " + newAdress + "\nEmail:" + newEmail + "\nNúmero de Telemovel: " + newNumTel + "\nDeseja mesmo remover?");
-                    ButtonType buttonSim = new ButtonType("Sim");
-                    ButtonType buttonNao = new ButtonType("Não");
-                    alert.getButtonTypes().setAll(buttonSim, buttonNao);
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("CONFIRMAR");
+                alert.setHeaderText("Deseja mesmo remover este fornecedor?");
+                alert.setContentText("Nome: " + newName + "\nNIF: " + newNIF + "\nMorada: " + newAdress + "\nEmail:" + newEmail + "\nNúmero de Telemovel: " + newNumTel + "\nDeseja mesmo remover?");
+                ButtonType buttonSim = new ButtonType("Sim");
+                ButtonType buttonNao = new ButtonType("Não");
+                alert.getButtonTypes().setAll(buttonSim, buttonNao);
 
-                    // Mostra o alerta de confirmação e aguarda a escolha do utilizador
-                    Optional<ButtonType> choose = alert.showAndWait();
-                    if (choose.isPresent() && choose.get() == buttonSim) {
-                        // Remove o fornecedor da base de dados
-                        try {
-                            String sql = "DELETE FROM fornecedor WHERE idFornecedor=?";
-                            PreparedStatement stmt = conn.prepareStatement(sql);
-                            stmt.setInt(1, newId);
-                            int rowsAffected = stmt.executeUpdate();
-                            FornecedorDAO.removerForn(newId);
+                Optional<ButtonType> choose = alert.showAndWait();
+                if (choose.isPresent() && choose.get() == buttonSim) {
+                    int id = Integer.parseInt(fornecedorId.getText());
+                    FornecedorDAO.removerForn(id);
+                    //System.out.println(Settings.getListForn().size());
+                    Fornecedor fornecedorRemovido = (Fornecedor) tableViewFornecedor.getSelectionModel().getSelectedItem();
+                    tableViewFornecedor.getItems().remove(fornecedorRemovido);
 
-                            if (rowsAffected > 0) {
-                                // Exibe um alerta informativo sobre a remoção bem-sucedida
-                                Alert alertRmFornecedor = new Alert(Alert.AlertType.INFORMATION);
-                                alertRmFornecedor.setTitle("INFORMAÇÃO");
-                                alertRmFornecedor.setHeaderText(null);
-                                alertRmFornecedor.setContentText("Fornecedor removido com sucesso!");
-                                alertRmFornecedor.showAndWait();
+                    // Limpeza dos campos após a remoção
+                    fornecedorId.clear();
+                    fornecedorName.clear();
+                    fornecedorNIF.clear();
+                    fornecedorAdress.clear();
+                    fornecedorEmail.clear();
+                    fornecedorNumTel.clear();
 
-                                // Limpa os campos após a remoção bem-sucedida
-                                fornecedorId.clear();
-                                fornecedorName.clear();
-                                fornecedorNIF.clear();
-                                fornecedorAdress.clear();
-                                fornecedorEmail.clear();
-                                fornecedorNumTel.clear();
-                            } else {
-                                // Exibe um alerta informando que o fornecedor não foi encontrado
-                                Alert alertNoFornecedor = new Alert(Alert.AlertType.WARNING);
-                                alertNoFornecedor.setTitle("AVISO");
-                                alertNoFornecedor.setHeaderText(null);
-                                alertNoFornecedor.setContentText("Fornecedor não encontrado com o ID fornecido.");
-                                alertNoFornecedor.showAndWait();
-                            }
-                        } catch (SQLException e) {
-                            // Exibe um alerta de erro se ocorrer um erro ao remover o fornecedor do banco de dados
-                            Alert alertError = new Alert(Alert.AlertType.ERROR);
-                            alertError.setTitle("ERRO");
-                            alertError.setHeaderText(null);
-                            alertError.setContentText("Erro ao remover o fornecedor: " + e.getMessage());
-                            alertError.showAndWait();
-                        }
-                    }
-                } else {
-                    // Exibe um alerta de erro se não for possível abrir a conexão com o banco de dados
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("ERRO");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Não foi possível ligar a base de dados.");
-                    alert.showAndWait();
-                };
-            } finally {
-                ConexaoBD.closeDB(); // Fecha a conexão com o banco de dados após o uso
+                    // Mostrar alerta de remoção bem-sucedida
+                    Alert alertRmFornecedor = new Alert(Alert.AlertType.INFORMATION);
+                    alertRmFornecedor.setTitle("INFORMAÇÃO");
+                    alertRmFornecedor.setHeaderText(null);
+                    alertRmFornecedor.setContentText("Fornecedor removido com sucesso!");
+                    alertRmFornecedor.showAndWait();
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERRO");
+                alert.setHeaderText(null);
+                alert.setContentText("Não foi possível conectar à base de dados.");
+                alert.showAndWait();
             }
         }
     }
+
     public void buttonFornEdit(ActionEvent actionEvent) {
     }
 

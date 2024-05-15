@@ -195,7 +195,7 @@
                                         </AnchorPane>
                                     </children>
                                 </AnchorPane>
-                                <AnchorPane fx:id="AnchorPaneClient" prefHeight="600.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <AnchorPane fx:id="AnchorPaneClient" prefHeight="600.0" prefWidth="879.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <AnchorPane fx:id="pesquisarCliente" layoutX="15.0" layoutY="12.0" prefHeight="349.0" prefWidth="849.0" style="-fx-background-color: fff; -fx-background-radius: 8;">
                                             <effect>
@@ -206,62 +206,68 @@
                                                     <columns>
                                                         <TableColumn fx:id="tableColumnIdClient" prefWidth="56.0" text="ID" />
                                                         <TableColumn fx:id="tableColumnNameClient" prefWidth="140.0" text="Nome" />
-                                                        <TableColumn fx:id="tableColumnNifClient" text="NIF" />
-                                                        <TableColumn fx:id="tableColumnAdressClient" prefWidth="183.0" text="Morada" />
-                                                        <TableColumn fx:id="tableColumnEmailCliente" prefWidth="193.0" text="Email" />
-                                                        <TableColumn fx:id="tableColumnNumTelClient" prefWidth="165.0" text="Número telemovel" />
+                                                        <TableColumn fx:id="tableColumnNifClient" prefWidth="126.0" text="NIF" />
+                                                        <TableColumn fx:id="tableColumnAdressClient" prefWidth="160.0" text="Morada" />
+                                                        <TableColumn fx:id="tableColumnEmailCliente" prefWidth="182.0" text="Email" />
+                                                        <TableColumn fx:id="tableColumnNumTelClient" prefWidth="153.0" text="Número telemovel" />
                                                     </columns>
                                                     <effect>
                                                         <DropShadow />
                                                     </effect>
                                                 </TableView>
-                                    <TextField fx:id="clientSearch" layoutX="16.0" layoutY="8.0" onKeyPressed="#clientSearch" prefHeight="25.0" prefWidth="317.0" promptText="Pesquisar" />
+                                    <TextField fx:id="clientSearch" layoutX="16.0" layoutY="8.0" onKeyPressed="#pesquisarCliente" prefHeight="25.0" prefWidth="317.0" promptText="Pesquisar" />
                                             </children>
                                         </AnchorPane>
-                                        <AnchorPane layoutX="15.0" layoutY="382.0" prefHeight="209.0" prefWidth="849.0" style="-fx-background-color: fff; -fx-background-radius: 8;">
+                                        <AnchorPane layoutX="15.0" layoutY="391.0" prefHeight="209.0" prefWidth="849.0" style="-fx-background-color: fff; -fx-background-radius: 8;">
                                             <effect>
                                                 <DropShadow />
                                             </effect>
                                             <children>
-                                                <Label layoutX="59.0" layoutY="28.0" text="Nome do cliente:">
+                                                <Label layoutX="59.0" layoutY="46.0" text="Nome do cliente:">
                                                     <font>
                                                         <Font name="Times New Roman" size="18.0" />
                                                     </font>
                                                 </Label>
-                                                <Label layoutX="136.0" layoutY="144.0" text="Email:">
+                                                <Label layoutX="136.0" layoutY="162.0" text="Email:">
                                                     <font>
                                                         <Font name="Times New Roman" size="18.0" />
                                                     </font>
                                                 </Label>
-                                                <Label layoutX="14.0" layoutY="114.0" text="Número de Telemovel:">
+                                                <Label layoutX="14.0" layoutY="132.0" text="Número de Telemovel:">
                                                     <font>
                                                         <Font name="Times New Roman" size="18.0" />
                                                     </font>
                                                 </Label>
-                                                <TextField fx:id="clientName" layoutX="206.0" layoutY="26.0" promptText="Nome completo" />
-                                                <TextField fx:id="clientNumTel" layoutX="207.0" layoutY="112.0" promptText="123456789" />
-                                                <TextField fx:id="clientEmail" layoutX="207.0" layoutY="141.0" promptText="\@gmail.com" />
+                                                <TextField fx:id="clientName" layoutX="206.0" layoutY="44.0" promptText="Nome completo" />
+                                                <TextField fx:id="clientNumTel" layoutX="207.0" layoutY="130.0" promptText="123456789" />
+                                                <TextField fx:id="clientEmail" layoutX="207.0" layoutY="159.0" promptText="\@gmail.com" />
                                                 <Button fx:id="btnAddClient" layoutX="486.0" layoutY="53.0" minHeight="36.0" mnemonicParsing="false" onAction="#buttonAddClient" prefHeight="36.0" prefWidth="114.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Adicionar" />
                                                 <Button fx:id="btnRemoveCliente" layoutX="486.0" layoutY="105.0" minHeight="36.0" mnemonicParsing="false" onAction="#buttonRemoveClient" prefHeight="36.0" prefWidth="114.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Remover" />
                                                 <Button fx:id="btnEditClient" layoutX="627.0" layoutY="78.0" minHeight="36.0" mnemonicParsing="false" onAction="#buttonEditClient" prefHeight="36.0" prefWidth="114.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Editar" />
-                                                <Label layoutX="122.0" layoutY="87.0" text="Morada:">
+                                                <Label layoutX="122.0" layoutY="105.0" text="Morada:">
                                                     <font>
                                                         <Font name="Times New Roman" size="18.0" />
                                                     </font>
                                                 </Label>
-                                                <TextField fx:id="clientAdress" layoutX="207.0" layoutY="85.0" promptText="Morada" />
-                                    <Label layoutX="148.0" layoutY="60.0" text="NIF:">
+                                                <TextField fx:id="clientAdress" layoutX="207.0" layoutY="103.0" promptText="Morada" />
+                                    <Label layoutX="148.0" layoutY="78.0" text="NIF:">
                                        <font>
                                           <Font name="Times New Roman" size="18.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="clientNIF" layoutX="206.0" layoutY="56.0" promptText="12345789" />
+                                    <TextField fx:id="clientNIF" layoutX="206.0" layoutY="74.0" promptText="12345789" />
+                                    <Label layoutX="83.0" layoutY="16.0" text="Id do cliente:">
+                                       <font>
+                                          <Font name="Times New Roman" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="clientId" disable="true" editable="false" layoutX="206.0" layoutY="13.0" promptText="Nome completo" />
                                             </children>
                                         </AnchorPane>
                               <Separator layoutX="15.0" layoutY="371.0" prefWidth="851.0" />
                                     </children>
                                 </AnchorPane>
-                                <AnchorPane fx:id="AnchorPaneFornecedor" prefHeight="600.0" prefWidth="879.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <AnchorPane fx:id="AnchorPaneFornecedor" prefHeight="600.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <AnchorPane prefHeight="600.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
@@ -291,40 +297,46 @@
                                                         <DropShadow />
                                                     </effect>
                                                     <children>
-                                                        <Label layoutX="21.0" layoutY="15.0" prefHeight="21.0" prefWidth="174.0" text="Nome do Fornecedor:">
+                                                        <Label layoutX="21.0" layoutY="54.0" prefHeight="21.0" prefWidth="174.0" text="Nome do Fornecedor:">
                                                             <font>
                                                                 <Font name="Times New Roman" size="19.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label layoutX="126.0" layoutY="85.0" text="Morada:">
+                                                        <Label layoutX="126.0" layoutY="124.0" text="Morada:">
                                                             <font>
                                                                 <Font name="Times New Roman" size="19.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label layoutX="14.0" layoutY="126.0" text="Número de Telemovel:">
+                                                        <Label layoutX="14.0" layoutY="165.0" text="Número de Telemovel:">
                                                             <font>
                                                                 <Font name="Times New Roman" size="19.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label layoutX="58.0" layoutY="158.0" text="Email:">
+                                                        <Label layoutX="402.0" layoutY="15.0" text="Email:">
                                                             <font>
                                                                 <Font name="Times New Roman" size="19.0" />
                                                             </font>
                                                         </Label>
-                                                        <TextField fx:id="fornecedorName" layoutX="199.0" layoutY="13.0" promptText="Nome Completo" />
-                                                        <TextField fx:id="fornecedorAdress" layoutX="199.0" layoutY="83.0" promptText="Morada" />
-                                                        <TextField fx:id="fornecedorNumTel" layoutX="199.0" layoutY="122.0" promptText="123456789" />
-                                                        <TextField fx:id="fornecedorEmail" layoutX="117.0" layoutY="156.0" prefHeight="25.0" prefWidth="231.0" promptText="\@gmail.com" />
+                                                        <TextField fx:id="fornecedorName" layoutX="199.0" layoutY="52.0" promptText="Nome Completo" />
+                                                        <TextField fx:id="fornecedorAdress" layoutX="199.0" layoutY="122.0" promptText="Morada" />
+                                                        <TextField fx:id="fornecedorNumTel" layoutX="199.0" layoutY="161.0" promptText="123456789" />
+                                                        <TextField fx:id="fornecedorEmail" layoutX="461.0" layoutY="13.0" prefHeight="25.0" prefWidth="231.0" promptText="\@gmail.com" />
                                                         <Button fx:id="btnFornecedorAdd" layoutX="426.0" layoutY="61.0" mnemonicParsing="false" onAction="#buttonFornAdd" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Adicionar" />
                                                         <Button fx:id="btnFornecedorRemove" layoutX="426.0" layoutY="106.0" mnemonicParsing="false" onAction="#buttonFornRemove" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Remover" />
                                                         <Button fx:id="btnFornecedorEdit" layoutX="547.0" layoutY="61.0" mnemonicParsing="false" onAction="#buttonFornEdit" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Editar" />
-                                          <Label layoutX="152.0" layoutY="52.0" prefHeight="21.0" prefWidth="55.0" text="NIF:">
+                                          <Label layoutX="152.0" layoutY="91.0" prefHeight="21.0" prefWidth="55.0" text="NIF:">
                                              <font>
                                                 <Font name="Times New Roman" size="19.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="fornecedorNIF" layoutX="199.0" layoutY="50.0" promptText="123456789" />
+                                          <TextField fx:id="fornecedorNIF" layoutX="199.0" layoutY="89.0" promptText="123456789" />
                                           <Button fx:id="btnDetailForn" layoutX="547.0" layoutY="108.0" mnemonicParsing="false" onAction="#buttonDetailForn" prefHeight="38.0" prefWidth="98.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Ver detalhes" />
+                                          <Label layoutX="46.0" layoutY="21.0" prefHeight="21.0" prefWidth="145.0" text="Id do Fornecedor:">
+                                             <font>
+                                                <Font name="Times New Roman" size="19.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="fornecedorId" disable="true" editable="false" layoutX="199.0" layoutY="19.0" promptText="Id" />
                                                     </children>
                                                 </AnchorPane>
                                     <Separator layoutX="15.0" layoutY="365.0" prefWidth="851.0" />

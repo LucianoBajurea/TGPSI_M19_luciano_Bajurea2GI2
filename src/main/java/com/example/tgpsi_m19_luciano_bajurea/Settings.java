@@ -81,7 +81,7 @@ public class Settings {
     }
 
     // LISTA DO CLIENTE
-    private static ObservableList<Cliente> listClient = FXCollections.observableArrayList();
+    public static ObservableList<Cliente> listClient = FXCollections.observableArrayList();
 
     // Método Getter e Setter da lista Cliente
     public static ObservableList<Cliente> getListClient() {

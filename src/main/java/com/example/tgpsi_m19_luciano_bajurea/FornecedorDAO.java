@@ -37,7 +37,7 @@ public class FornecedorDAO {
         return fornecedor;
     }
 
-    public static void removerForn(int id){
+    public static void removerForn(int idFornecedor){
         Connection conn = ConexaoBD.openDB();
         PreparedStatement stmt = null;
 
@@ -45,8 +45,8 @@ public class FornecedorDAO {
 
         try{
             stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, id);
-            stmt.execute();
+            stmt.setInt(1, idFornecedor);
+            stmt.executeUpdate();
             System.out.println("Fornecedor eliminado com sucesso");
         }
         catch (SQLException ex) {

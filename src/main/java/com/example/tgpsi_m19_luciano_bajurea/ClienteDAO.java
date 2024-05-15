@@ -35,4 +35,24 @@ public class ClienteDAO {
         }
         return cliente;
     }
+
+    public static void removerClient(int idClient){
+        Connection conn = ConexaoBD.openDB();
+        PreparedStatement stmt = null;
+
+        String sql = "DELETE FROM cliente WHERE idCliente = ?;";
+
+        try{
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, idClient);
+            stmt.executeUpdate();
+            System.out.println("Cliente eliminado com sucesso");
+        }
+        catch (SQLException ex) {
+            System.out.println("Erro ao eliminar o Cliente: "+ex);
+        }
+        finally {
+            ConexaoBD.closeDB(stmt);
+        }
+    }
 }
