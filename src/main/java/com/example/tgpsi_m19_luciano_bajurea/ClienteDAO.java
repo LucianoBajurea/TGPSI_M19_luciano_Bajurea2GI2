@@ -2,10 +2,7 @@ package com.example.tgpsi_m19_luciano_bajurea;
 
 import javafx.collections.ObservableList;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ClienteDAO {
     public static ObservableList<Cliente> listCliente() {
@@ -50,6 +47,30 @@ public class ClienteDAO {
         }
         catch (SQLException ex) {
             System.out.println("Erro ao eliminar o Cliente: "+ex);
+        }
+        finally {
+            ConexaoBD.closeDB(stmt);
+        }
+    }
+    public static void editarContacto(Cliente c){
+        Connection conn = ConexaoBD.openDB();
+        PreparedStatement stmt = null;
+
+        String sql = "UPDATE cliente SET nome = ?, nif = ?, morada = ?, numTelemovel = ?, email = ? WHERE idCliente = ?;";
+
+        try{
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, c.getIdCliente());
+            stmt.setString(2, c.getNome());;
+            stmt.setString(3, c.getNif());
+            stmt.setString(4, c.getMorada());
+            stmt.setString(5, c.getNumTelemovel());
+            stmt.setString(6, c.getEmail());
+            stmt.execute();
+            System.out.println("Contacto atualizado com sucesso");
+        }
+        catch(SQLException ex){
+            System.out.println("Erro ao atualizar contacto: "+ex);
         }
         finally {
             ConexaoBD.closeDB(stmt);

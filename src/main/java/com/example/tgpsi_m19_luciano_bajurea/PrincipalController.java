@@ -381,6 +381,7 @@ public class PrincipalController implements Initializable {
     }
 
     public void buttonEdit(ActionEvent actionEvent) {
+
     }
 
     public void ProductListar() {
@@ -602,7 +603,6 @@ public class PrincipalController implements Initializable {
                 if (choose.isPresent() && choose.get() == buttonSim) {
                     int id = Integer.parseInt(clientId.getText());
                     ClienteDAO.removerClient(id);
-                    //System.out.println(Settings.getListForn().size());
                     Cliente clienteRemovido = (Cliente) tableViewClient.getSelectionModel().getSelectedItem();
                     tableViewClient.getItems().remove(clienteRemovido);
 
@@ -632,6 +632,90 @@ public class PrincipalController implements Initializable {
     }
 
     public void buttonEditClient(ActionEvent actionEvent) {
+        if (clientName.getText().isEmpty() || clientNIF.getText().isEmpty() || clientAdress.getText().isEmpty() || clientEmail.getText().isEmpty() || clientNumTel.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERRO!");
+            alert.setHeaderText("Por favor,coloque todos os dados nos respetivos campos");
+            alert.setContentText("Clique no botão para tentar novamente!");
+            alert.showAndWait();
+        } else {
+            int newClientId = Integer.parseInt(clientId.getText());
+            Cliente clienteEditado = null;
+
+            for (Cliente c : Settings.getListClient()) {
+                if (c.getIdCliente() == newClientId) {
+                    clienteEditado = c;
+                    break;
+                }
+            }
+
+            if (clienteEditado != null) {
+                clienteEditado.setNome(clientName.getText());
+                clienteEditado.setNif(clientNIF.getText());
+                clienteEditado.setMorada(clientAdress.getText());
+                clienteEditado.setNumTelemovel(clientNumTel.getText());
+                clienteEditado.setEmail(clientEmail.getText());
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Editar Cliente");
+                alert.setHeaderText("Deseja realmente editar?");
+                alert.setContentText("Clique no botão para continuar!");
+                ButtonType buttonSim = new ButtonType("Sim");
+                ButtonType buttonNao = new ButtonType("Não");
+                alert.getButtonTypes().setAll(buttonSim, buttonNao);
+
+                Optional<ButtonType> choose = alert.showAndWait();
+                if (choose.isPresent() && choose.get() == buttonSim) {
+                    Connection conn = null;
+                    try {
+                        conn = ConexaoBD.openDB();
+                        if (conn != null) {
+                            String updateQuery = "UPDATE cliente SET nome = ?, nif = ?, morada = ?, numTelemovel = ?, email = ? WHERE idCliente = ?";
+                            PreparedStatement preparedStatement = conn.prepareStatement(updateQuery);
+                            preparedStatement.setString(1, clientName.getText());
+                            preparedStatement.setString(2, clientNIF.getText());
+                            preparedStatement.setString(3, clientAdress.getText());
+                            preparedStatement.setString(4, clientNumTel.getText());
+                            preparedStatement.setString(5, clientEmail.getText());
+                            preparedStatement.setInt(6, newClientId);
+
+                            int rowsAffected = preparedStatement.executeUpdate();
+                            if (rowsAffected > 0) {
+                                for (Cliente cliente : Settings.getListClient()) {
+                                    if (cliente.getIdCliente() == clienteEditado.getIdCliente()) {
+                                        int index = Settings.getListClient().indexOf(cliente);
+                                        Settings.getListClient().set(index, clienteEditado);
+                                        break;
+                                    }
+                                }
+                                tableViewClient.refresh();
+
+                                Alert alertEditClient = new Alert(Alert.AlertType.INFORMATION);
+                                alertEditClient.setTitle("CONFIRMAÇÃO!");
+                                alertEditClient.setHeaderText("Edição realizada com sucesso!");
+                                alertEditClient.setContentText("Clique no botão para continuar.");
+                                alertEditClient.showAndWait();
+                                Settings.setClientEdit(null);
+                            } else {
+                                //throw new SQLException("Erro ao atualizar o cliente no banco de dados.");
+                            }
+                        } else {
+                            Alert alertConnError = new Alert(Alert.AlertType.ERROR);
+                            alertConnError.setTitle("ERRO!");
+                            alertConnError.setHeaderText(null);
+                            alertConnError.setContentText("Não foi possível conectar à base de dados.");
+                            alertConnError.showAndWait();
+                        }
+                    } catch (SQLException e) {
+                        Alert alertError = new Alert(Alert.AlertType.ERROR);
+                        alertError.setTitle("ERRO!");
+                        alertError.setHeaderText(null);
+                        alertError.setContentText("Erro ao atualizar o cliente: " + e.getMessage());
+                        alertError.showAndWait();
+                    }
+                }
+            }
+        }
     }
 
     public void clienteListar() {
@@ -648,7 +732,7 @@ public class PrincipalController implements Initializable {
 
 
     //----------------------------------------------------------------------------------------
-    // FORNECEDOR
+    // FORNECEDOR - FEITO TUDO
     public void verFornecedor(MouseEvent event) {
         // Obtém os dados do Fornecedor selecionado na tabela
         Fornecedor FornDataVer = (Fornecedor) tableViewFornecedor.getSelectionModel().getSelectedItem();
@@ -860,6 +944,90 @@ public class PrincipalController implements Initializable {
     }
 
     public void buttonFornEdit(ActionEvent actionEvent) {
+        if (fornecedorName.getText().isEmpty() || fornecedorNIF.getText().isEmpty() || fornecedorAdress.getText().isEmpty() || fornecedorEmail.getText().isEmpty() || fornecedorNumTel.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERRO!");
+            alert.setHeaderText("Por favor,coloque todos os dados nos respetivos campos");
+            alert.setContentText("Clique no botão para tentar novamente!");
+            alert.showAndWait();
+        } else {
+            int newFornId = Integer.parseInt(fornecedorId.getText());
+            Fornecedor fornecedorEdit = null;
+
+            for (Fornecedor f : Settings.getListForn()) {
+                if (f.getIdFornecedor() == newFornId) {
+                    fornecedorEdit = f;
+                    break;
+                }
+            }
+
+            if (fornecedorEdit != null) {
+                fornecedorEdit.setNome(fornecedorName.getText());
+                fornecedorEdit.setNif(fornecedorNIF.getText());
+                fornecedorEdit.setMorada(fornecedorAdress.getText());
+                fornecedorEdit.setNumTelemovel(fornecedorNumTel.getText());
+                fornecedorEdit.setEmail(fornecedorEmail.getText());
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Editar Fornecedor");
+                alert.setHeaderText("Deseja realmente editar?");
+                alert.setContentText("Clique no botão para continuar!");
+                ButtonType buttonSim = new ButtonType("Sim");
+                ButtonType buttonNao = new ButtonType("Não");
+                alert.getButtonTypes().setAll(buttonSim, buttonNao);
+
+                Optional<ButtonType> choose = alert.showAndWait();
+                if (choose.isPresent() && choose.get() == buttonSim) {
+                    Connection conn = null;
+                    try {
+                        conn = ConexaoBD.openDB();
+                        if (conn != null) {
+                            String updateQuery = "UPDATE fornecedor SET nome = ?, nif = ?, morada = ?, numTelemovel = ?, email = ? WHERE idFornecedor = ?";
+                            PreparedStatement preparedStatement = conn.prepareStatement(updateQuery);
+                            preparedStatement.setString(1, fornecedorName.getText());
+                            preparedStatement.setString(2, fornecedorNIF.getText());
+                            preparedStatement.setString(3, fornecedorAdress.getText());
+                            preparedStatement.setString(4, fornecedorNumTel.getText());
+                            preparedStatement.setString(5, fornecedorEmail.getText());
+                            preparedStatement.setInt(6, newFornId);
+
+                            int rowsAffected = preparedStatement.executeUpdate();
+                            if (rowsAffected > 0) {
+                                for (Fornecedor fornecedor : Settings.getListForn()) {
+                                    if (fornecedor.getIdFornecedor() == fornecedorEdit.getIdFornecedor()) {
+                                        int index = Settings.getListForn().indexOf(fornecedor);
+                                        Settings.getListForn().set(index, fornecedorEdit);
+                                        break;
+                                    }
+                                }
+                                tableViewFornecedor.refresh();
+
+                                Alert alertEditForn = new Alert(Alert.AlertType.INFORMATION);
+                                alertEditForn.setTitle("CONFIRMAÇÃO!");
+                                alertEditForn.setHeaderText("Edição realizada com sucesso!");
+                                alertEditForn.setContentText("Clique no botão para continuar.");
+                                alertEditForn.showAndWait();
+                                Settings.setFornecedorEdit(null);
+                            } else {
+                                //throw new SQLException("Erro ao atualizar o cliente no banco de dados.");
+                            }
+                        } else {
+                            Alert alertConnError = new Alert(Alert.AlertType.ERROR);
+                            alertConnError.setTitle("ERRO!");
+                            alertConnError.setHeaderText(null);
+                            alertConnError.setContentText("Não foi possível conectar à base de dados.");
+                            alertConnError.showAndWait();
+                        }
+                    } catch (SQLException e) {
+                        Alert alertError = new Alert(Alert.AlertType.ERROR);
+                        alertError.setTitle("ERRO!");
+                        alertError.setHeaderText(null);
+                        alertError.setContentText("Erro ao atualizar o fornecedor: " + e.getMessage());
+                        alertError.showAndWait();
+                    }
+                }
+            }
+        }
     }
 
     public void buttonDetailForn(ActionEvent actionEvent) throws Exception {
