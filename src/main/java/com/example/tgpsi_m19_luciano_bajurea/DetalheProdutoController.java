@@ -1,42 +1,52 @@
 package com.example.tgpsi_m19_luciano_bajurea;
 
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class DetalheProdutoController {
-    public TextField detailNameProduct;
-    public TextField detailCategoryProduct;
-    public TextField detailPriceProduct;
-    public TextField detailDesProduct;
-    public Button btnReturn;
-    public AnchorPane anchorPaneDetailProduct;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-    public void buttonCloseApp(ActionEvent actionEvent) throws Exception {
+public class DetalheProdutoController implements Initializable {
 
-        Parent scene = FXMLLoader.load(getClass().getResource("Principal.fxml"));
+    @FXML
+    private TableView tableViewCategoria;
+    @FXML
+    private TableColumn tableColumnIdCategoria;
+    @FXML
+    private TableColumn tableColumnNomeCategoria;
+    @FXML
+    private TableColumn tableColumnDescCategoria;
+    @FXML
+    private TextField categoriaSearch;
 
-        Stage seeDetailForn = new Stage();
-        seeDetailForn.setTitle("Fornecedor - Detalhe do Fornecedor");
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        ProductListar();
+    }
 
-        // Associação da Scene à Stage
-        seeDetailForn.setScene(new Scene(scene));
+    public void ProductListar() {
+        // Configura as colunas da tabela para associar os atributos do objeto Produto
+        tableColumnIdCategoria.setCellValueFactory(new PropertyValueFactory<Categoria, Integer>("idCategoria"));
+        tableColumnNomeCategoria.setCellValueFactory(new PropertyValueFactory<Categoria, String>("nomeCategoria"));
+        tableColumnDescCategoria.setCellValueFactory(new PropertyValueFactory<Categoria, String>("descricaoCategoria"));
 
-        // Abertura da janela seeDetailProduct em modo MODAL, em relação à primaryStage
-        seeDetailForn.initOwner(Settings.getPrimaryStage());
-        seeDetailForn.initModality(Modality.WINDOW_MODAL);
-
-        // Abertura da janela
-        seeDetailForn.show();
-}
-
-    public void buttonReturn(ActionEvent actionEvent) {
-        System.exit(0);
+        Settings.getlistCategory().clear();
+        // Associação da Obse0rvableList à TableView. A partir daqui, tudo se faz na ObservableList.
+        tableViewCategoria.setItems(CategoriaDAO.listCategoria());
     }
 }

@@ -90,5 +90,29 @@ public class Settings {
     public static void setListClient(ObservableList<Cliente> listClient) {
         Settings.listClient = listClient;
     }
+
+    //-------------------------------------------------------------------------------
+    // PARTE DA CATEGORIA
+    private static Categoria categoriaEdit;
+
+    // Método Getter e Setter do Cliente
+    public static Categoria getCategoriaEdit() {
+        return categoriaEdit;
+    }
+
+    public static void setCategoriaEdit(Categoria categoriaEdit) {
+        Settings.categoriaEdit = categoriaEdit;
+    }
+
+    // LISTA DO CLIENTE
+    public static ObservableList<Categoria> listCategory = FXCollections.observableArrayList();
+
+    // Método Getter e Setter da lista Cliente
+    public static ObservableList<Categoria> getlistCategory() {
+        return listCategory;
+    }
+    public static void setlistCategory(ObservableList<Categoria> listCategory) {
+        Settings.listCategory = listCategory;
+    }
 }
 

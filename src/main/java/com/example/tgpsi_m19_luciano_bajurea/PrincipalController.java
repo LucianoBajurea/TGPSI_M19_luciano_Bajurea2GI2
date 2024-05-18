@@ -28,8 +28,11 @@ import java.util.ResourceBundle;
 import static com.example.tgpsi_m19_luciano_bajurea.ConexaoBD.*;
 
 public class PrincipalController implements Initializable {
-
-    public TableColumn tableColumnDesc;
+    // Atributos privados do principal.FXML
+    @FXML
+    private TableColumn tableColumnDesc;
+    @FXML
+    private TextField productSearch;
     @FXML
     private Button btnSeeDetailProduct;
     @FXML
@@ -218,7 +221,7 @@ public class PrincipalController implements Initializable {
     // PRODUTO
 
     // Declaração de um array de strings que contém os tipos de produtos disponíveis
-    private String[] typeProductCombo = {"Roupa", "Rélogios", "Objetos automovel"};
+    private String[] typeProductCombo = {"Roupa", "Acessórios", "Automóvel","Eletrónica","Eletrodómesticos"};
 
     // Método para inicializar os itens do ComboBox de categorias de produtos
     public void InventoryTypeProduct(){
@@ -250,6 +253,40 @@ public class PrincipalController implements Initializable {
 
         // Define o campo de preço com o valor do preço do objeto Produto
         productPrice.setText(String.valueOf(ProductDataVer.getPrecoProduto()));
+    }
+
+    public void pesquisarProduto(KeyEvent keyEvent) {
+        // Cria um objeto FilteredList para filtrar a lista
+        FilteredList<Produto> filter = new FilteredList<>(Settings.listProduct, e -> true);
+
+        // Adiciona um listener ao texto da barra de pesquisa
+        productSearch.textProperty().addListener((Observable, oldValue, newValue) ->{
+
+            filter.setPredicate(predicateProduct ->{
+                // Verifica se o novo valor da pesquisa é nulo ou vazio
+                if(newValue == null && newValue.isEmpty()){
+                    return true;
+                }
+                // Converte o valor da pesquisa para minúsculas
+                String pesquisarProduto = newValue.toLowerCase();
+
+                // Verifica se o ID do Produto contém o valor da pesquisa
+                if (String.valueOf(predicateProduct.getIdProduto()).contains(pesquisarProduto)){
+                    return true;
+                    // Verifica se o nome do Produto contém o valor da pesquisa
+                }else if (predicateProduct.getNomeProduto().toLowerCase().contains(pesquisarProduto)) {
+                    return true;
+                    // Verifica se o preço do Produto contém o valor da pesquisa
+                } else if (String.valueOf(predicateProduct.getPrecoProduto()).contains(pesquisarProduto)) {
+                    return true;
+                }
+                // Retorna falso se nenhum critério for atendido
+                return false;
+            });
+        });
+        SortedList<Produto>sortedList = new SortedList<>(filter);
+        sortedList.comparatorProperty().bind(tableViewProduct.comparatorProperty());
+        tableViewProduct.setItems(sortedList);
     }
 
     public void buttonAdd(ActionEvent actionEvent) {
@@ -1083,30 +1120,36 @@ public class PrincipalController implements Initializable {
     }
 
     public void buttonFornEdit(ActionEvent actionEvent) {
+        // Verifica se algum dos campos obrigatórios está vazio
         if (fornecedorName.getText().isEmpty() || fornecedorNIF.getText().isEmpty() || fornecedorAdress.getText().isEmpty() || fornecedorEmail.getText().isEmpty() || fornecedorNumTel.getText().isEmpty()) {
+            // Cria e mostra uma mensagem de erro se algum campo estiver vazio
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
             alert.setHeaderText("Por favor,coloque todos os dados nos respetivos campos");
             alert.setContentText("Clique no botão para tentar novamente!");
             alert.showAndWait();
         } else {
+            // Obtém o ID do fornecedor a partir do campo de texto
             int newFornId = Integer.parseInt(fornecedorId.getText());
             Fornecedor fornecedorEdit = null;
 
+            // Procura o fornecedor na lista de fornecedores
             for (Fornecedor f : Settings.getListForn()) {
                 if (f.getIdFornecedor() == newFornId) {
                     fornecedorEdit = f;
                     break;
                 }
             }
-
+            // Se o fornecedor foi encontrado na lista
             if (fornecedorEdit != null) {
+                // Atualiza os dados do fornecedor com os valores dos campos de texto
                 fornecedorEdit.setNome(fornecedorName.getText());
                 fornecedorEdit.setNif(fornecedorNIF.getText());
                 fornecedorEdit.setMorada(fornecedorAdress.getText());
                 fornecedorEdit.setNumTelemovel(fornecedorNumTel.getText());
                 fornecedorEdit.setEmail(fornecedorEmail.getText());
 
+                // Cria um alerta de confirmação para confirmar a edição
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Editar Fornecedor");
                 alert.setHeaderText("Deseja realmente editar?");
@@ -1115,12 +1158,15 @@ public class PrincipalController implements Initializable {
                 ButtonType buttonNao = new ButtonType("Não");
                 alert.getButtonTypes().setAll(buttonSim, buttonNao);
 
+                // Mostra o alerta e espera pela resposta do utilizador
                 Optional<ButtonType> choose = alert.showAndWait();
                 if (choose.isPresent() && choose.get() == buttonSim) {
                     Connection conn = null;
                     try {
+                        // Tenta abrir a conexão com a base de dados
                         conn = ConexaoBD.openDB();
                         if (conn != null) {
+                            // Prepara a instrução SQL para atualizar os dados do fornecedor
                             String sql = "UPDATE fornecedor SET nome = ?, nif = ?, morada = ?, numTelemovel = ?, email = ? WHERE idFornecedor = ?";
                             PreparedStatement stmt = conn.prepareStatement(sql);
                             stmt.setString(1, fornecedorName.getText());
@@ -1130,8 +1176,10 @@ public class PrincipalController implements Initializable {
                             stmt.setString(5, fornecedorEmail.getText());
                             stmt.setInt(6, newFornId);
 
+                            // Executa a atualização e verifica se foi bem-sucedida
                             int rowsAffected = stmt.executeUpdate();
                             if (rowsAffected > 0) {
+                                // Atualiza a lista de fornecedores com os novos dados
                                 for (Fornecedor fornecedor : Settings.getListForn()) {
                                     if (fornecedor.getIdFornecedor() == fornecedorEdit.getIdFornecedor()) {
                                         int index = Settings.getListForn().indexOf(fornecedor);
@@ -1139,16 +1187,20 @@ public class PrincipalController implements Initializable {
                                         break;
                                     }
                                 }
+                                // Atualiza a tabela de fornecedores
                                 tableViewFornecedor.refresh();
 
+                                // Cria e mostra uma mensagem de confirmação
                                 Alert alertEditForn = new Alert(Alert.AlertType.INFORMATION);
                                 alertEditForn.setTitle("CONFIRMAÇÃO!");
                                 alertEditForn.setHeaderText("Edição realizada com sucesso!");
                                 alertEditForn.setContentText("Clique no botão para continuar.");
                                 alertEditForn.showAndWait();
+                                // Define o fornecedor editado como null
                                 Settings.setFornecedorEdit(null);
                             }
                         } else {
+                            // Cria e mostra uma mensagem de erro se não for possível conectar à base de dados
                             Alert alertConnError = new Alert(Alert.AlertType.ERROR);
                             alertConnError.setTitle("ERRO!");
                             alertConnError.setHeaderText(null);
@@ -1156,6 +1208,7 @@ public class PrincipalController implements Initializable {
                             alertConnError.showAndWait();
                         }
                     } catch (SQLException e) {
+                        // Cria e mostra uma mensagem de erro se ocorrer uma exceção SQL
                         Alert alertError = new Alert(Alert.AlertType.ERROR);
                         alertError.setTitle("ERRO!");
                         alertError.setHeaderText(null);
@@ -1195,4 +1248,5 @@ public class PrincipalController implements Initializable {
 
         tableViewFornecedor.setItems(FornecedorDAO.listFornecedor());
     }
+
 }

@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -15,8 +12,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tgpsi_m19_luciano_bajurea.DetalheProdutoController">
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" />
       <BorderPane prefHeight="200.0" prefWidth="200.0" />
@@ -40,15 +36,6 @@
                      </font>
                   </Label>
                   <Line endX="69.0" layoutX="118.0" layoutY="208.0" startX="-70.0" />
-                  <Button layoutX="13.0" layoutY="515.0" mnemonicParsing="false" onAction="#buttonCloseApp" style="-fx-background-radius: 60; -fx-background-color: transparent;" text="Sair">
-                     <graphic>
-                        <ImageView fitHeight="17.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@image/sairImagem-removebg-preview.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
                   <Label layoutX="29.0" layoutY="275.0" text="Tabela Categoria">
                      <font>
                         <Font name="Times New Roman Bold Italic" size="25.0" />
@@ -65,23 +52,21 @@
                   </Label>
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="244.0" layoutY="17.0" prefHeight="565.0" prefWidth="836.0" style="-fx-background-radius: 8; -fx-background-color: fff;">
+            <AnchorPane layoutX="244.0" layoutY="12.0" prefHeight="577.0" prefWidth="836.0" style="-fx-background-radius: 8; -fx-background-color: fff;">
                <effect>
                   <DropShadow />
                </effect>
                <children>
-                  <TableView layoutX="26.0" layoutY="39.0" prefHeight="513.0" prefWidth="780.0">
+                  <TableView fx:id="tableViewCategoria" layoutX="28.0" layoutY="19.0" prefHeight="544.0" prefWidth="781.0">
                     <columns>
-                        <TableColumn prefWidth="75.0" text="ID da categoria" />
-                      <TableColumn prefWidth="470.0" text="Nome da Categoria" />
-                      <TableColumn prefWidth="309.0" text="Descrição da Categoria" />
+                        <TableColumn fx:id="tableColumnIdCategoria" prefWidth="56.0" text="ID" />
+                      <TableColumn fx:id="tableColumnNomeCategoria" prefWidth="121.0" text="Nome da Categoria" />
+                      <TableColumn fx:id="tableColumnDescCategoria" maxWidth="602.0" prefWidth="602.0" text="Descrição da Categoria" />
                     </columns>
+                     <effect>
+                        <DropShadow />
+                     </effect>
                   </TableView>
-                  <TextField layoutX="26.0" layoutY="5.0" prefHeight="25.0" prefWidth="268.0" promptText="Pesquisar" style="-fx-background-radius: 8;">
-                     <cursor>
-                        <Cursor fx:constant="DEFAULT" />
-                     </cursor>
-                  </TextField>
                </children>
             </AnchorPane>
          </children>
