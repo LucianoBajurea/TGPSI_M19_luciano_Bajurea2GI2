@@ -88,7 +88,7 @@
                     <center>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-shape: 10;" BorderPane.alignment="CENTER">
                             <children>
-                                <AnchorPane fx:id="AnchorPaneProduct" layoutX="14.0" layoutY="14.0" prefHeight="600.0" prefWidth="879.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <AnchorPane fx:id="AnchorPaneProduct" layoutX="14.0" layoutY="14.0" prefHeight="600.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="349.0" prefWidth="849.0" style="-fx-background-color: fff; -fx-background-radius: 8;">
                                             <effect>
@@ -97,50 +97,41 @@
                                             <children>
                                                 <TableView fx:id="tableViewProduct" layoutX="14.0" layoutY="43.0" onMouseClicked="#verProdutos" prefHeight="300.0" prefWidth="818.0">
                                                     <columns>
-                                                        <TableColumn fx:id="tableColumnIdProduct" prefWidth="75.0" text="ID Produto" />
-                                                        <TableColumn fx:id="tableColumnNameProduct" prefWidth="451.0" text="Nome do Produto" />
-                                                        <TableColumn fx:id="tableColumnTypeProduct" prefWidth="199.0" text="Categoria" />
-                                                        <TableColumn fx:id="tableColumnPriceProduct" prefWidth="90.0" text="Preço" />
+                                                        <TableColumn fx:id="tableColumnIdProduct" prefWidth="69.0" text="ID Produto" />
+                                                        <TableColumn fx:id="tableColumnNameProduct" prefWidth="192.0" text="Nome do Produto" />
+                                                        <TableColumn fx:id="tableColumnTypeProduct" prefWidth="125.0" text="Categoria" />
+                                                        <TableColumn fx:id="tableColumnDesc" maxWidth="324.0" prefWidth="324.0" text="Descrição" />
+                                                        <TableColumn fx:id="tableColumnPriceProduct" maxWidth="210.0" prefWidth="107.0" text="Preço" />
                                                     </columns>
                                                     <effect>
                                                         <DropShadow />
                                                     </effect>
                                                 </TableView>
-                                    <TextField layoutX="14.0" layoutY="8.0" prefHeight="25.0" prefWidth="317.0" promptText="Pesquisar" />
+                                    <TextField layoutX="14.0" layoutY="8.0" prefHeight="25.0" prefWidth="317.0" promptText="Pesquisar" style="-fx-background-radius: 8;" />
                                             </children>
                                         </AnchorPane>
-                                        <AnchorPane layoutX="15.0" layoutY="381.0" prefHeight="209.0" prefWidth="849.0" style="-fx-background-color: fff; -fx-background-radius: 8;">
+                                        <AnchorPane layoutX="14.0" layoutY="377.0" prefHeight="209.0" prefWidth="849.0" style="-fx-background-color: fff; -fx-background-radius: 8;">
                                             <effect>
                                                 <DropShadow />
                                             </effect>
                                             <children>
                                                 <Label layoutX="189.0" layoutY="29.0" text="ID Produto: ">
                                                     <font>
-                                                        <Font name="Times New Roman Bold" size="18.0" />
+                                                        <Font name="Times New Roman" size="18.0" />
                                                     </font>
                                                 </Label>
                                                 <Label layoutX="140.0" layoutY="65.0" text="Nome do Produto: ">
                                                     <font>
-                                                        <Font name="Times New Roman Bold" size="18.0" />
+                                                        <Font name="Times New Roman" size="18.0" />
                                                     </font>
                                                 </Label>
-                                                <TextField fx:id="productId" layoutX="287.0" layoutY="28.0" prefHeight="22.0" prefWidth="56.0" promptText="0">
+                                                <TextField fx:id="productId" disable="true" editable="false" layoutX="287.0" layoutY="28.0" prefHeight="22.0" prefWidth="56.0" promptText="0">
                                                     <font>
                                                         <Font name="Times New Roman" size="12.0" />
                                                     </font>
                                                 </TextField>
                                                 <TextField fx:id="productName" layoutX="287.0" layoutY="61.0" prefHeight="22.0" prefWidth="175.0" promptText="Insere o nome do Produto" />
-                                                <Label layoutX="109.0" layoutY="98.0" text="Categoria de produto:">
-                                                    <font>
-                                                        <Font name="Times New Roman Bold" size="18.0" />
-                                                    </font>
-                                                </Label>
                                                 <ComboBox fx:id="productCategoria" layoutX="287.0" layoutY="98.0" prefWidth="150.0" promptText="Escolhe a opção..." />
-                                                <Label layoutX="165.0" layoutY="136.0" text="Preço Produto: ">
-                                                    <font>
-                                                        <Font name="Times New Roman Bold" size="18.0" />
-                                                    </font>
-                                                </Label>
                                                 <TextField fx:id="productPrice" layoutX="287.0" layoutY="135.0" prefHeight="22.0" prefWidth="56.0" promptText="0€">
                                                     <font>
                                                         <Font name="Times New Roman" size="12.0" />
@@ -150,6 +141,16 @@
                                                 <Button fx:id="btnRemove" layoutX="510.0" layoutY="92.0" mnemonicParsing="false" onAction="#buttonRemove" prefHeight="42.0" prefWidth="111.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Remover" />
                                                 <Button fx:id="btnEdit" layoutX="634.0" layoutY="40.0" mnemonicParsing="false" onAction="#buttonEdit" prefHeight="42.0" prefWidth="111.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Editar" />
                                                 <Button fx:id="btnSeeDetailProduct" layoutX="634.0" layoutY="92.0" mnemonicParsing="false" onAction="#buttonSeeDetailProduct" prefHeight="42.0" prefWidth="111.0" style="-fx-background-color: #fcc426; -fx-background-radius: 8;" text="Ver detalhes" />
+                                    <Label layoutX="114.0" layoutY="103.0" text="Categoria do Produto: ">
+                                       <font>
+                                          <Font name="Times New Roman" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="142.0" layoutY="136.0" text="Preço do Produto: ">
+                                       <font>
+                                          <Font name="Times New Roman" size="18.0" />
+                                       </font>
+                                    </Label>
                                             </children>
                                         </AnchorPane>
                                         <Separator layoutX="13.0" layoutY="370.0" prefWidth="851.0" />
@@ -215,10 +216,10 @@
                                                         <DropShadow />
                                                     </effect>
                                                 </TableView>
-                                    <TextField fx:id="clientSearch" layoutX="16.0" layoutY="8.0" onKeyPressed="#pesquisarCliente" prefHeight="25.0" prefWidth="317.0" promptText="Pesquisar" />
+                                    <TextField fx:id="clientSearch" layoutX="16.0" layoutY="8.0" onKeyPressed="#pesquisarCliente" prefHeight="25.0" prefWidth="317.0" promptText="Pesquisar" style="-fx-background-radius: 8;" />
                                             </children>
                                         </AnchorPane>
-                                        <AnchorPane layoutX="15.0" layoutY="391.0" prefHeight="209.0" prefWidth="849.0" style="-fx-background-color: fff; -fx-background-radius: 8;">
+                                        <AnchorPane layoutX="15.0" layoutY="381.0" prefHeight="209.0" prefWidth="849.0" style="-fx-background-color: fff; -fx-background-radius: 8;">
                                             <effect>
                                                 <DropShadow />
                                             </effect>
@@ -267,7 +268,7 @@
                               <Separator layoutX="15.0" layoutY="371.0" prefWidth="851.0" />
                                     </children>
                                 </AnchorPane>
-                                <AnchorPane fx:id="AnchorPaneFornecedor" prefHeight="600.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <AnchorPane fx:id="AnchorPaneFornecedor" prefHeight="600.0" prefWidth="879.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <AnchorPane prefHeight="600.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
@@ -289,7 +290,7 @@
                                                                 <DropShadow />
                                                             </effect>
                                                         </TableView>
-                                          <TextField fx:id="FornecedorSearch" layoutX="16.0" layoutY="14.0" onKeyPressed="#pesquisarFornecedor" prefHeight="25.0" prefWidth="317.0" promptText="Pesquisar" />
+                                          <TextField fx:id="FornecedorSearch" layoutX="16.0" layoutY="14.0" onKeyPressed="#pesquisarFornecedor" prefHeight="25.0" prefWidth="317.0" promptText="Pesquisar" style="-fx-background-radius: 8;" />
                                                     </children>
                                                 </AnchorPane>
                                                 <AnchorPane layoutX="15.0" layoutY="377.0" prefHeight="209.0" prefWidth="849.0" style="-fx-background-color: fff; -fx-background-radius: 8;" AnchorPane.topAnchor="377.0">

@@ -1,63 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPaneDetailProduct" prefHeight="484.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tgpsi_m19_luciano_bajurea.DetalheProdutoController">
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane prefHeight="540.0" prefWidth="216.0" style="-fx-background-color: #f7d340;">
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+      <BorderPane prefHeight="200.0" prefWidth="200.0" />
+      <AnchorPane prefHeight="555.0" prefWidth="214.0">
          <children>
-            <Line endX="69.0" layoutX="118.0" layoutY="208.0" startX="-70.0" />
-            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="45.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@image/img-removebg-preview.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="70.0" layoutY="215.0" prefHeight="37.0" prefWidth="95.0" text="Detalhes">
-               <font>
-                  <Font name="Times New Roman Bold" size="24.0" />
-               </font>
-            </Label>
-            <Label layoutX="104.0" layoutY="252.0" prefHeight="37.0" prefWidth="26.0" text="do">
-               <font>
-                  <Font name="Times New Roman Bold" size="24.0" />
-               </font>
-            </Label>
-            <Label layoutX="75.0" layoutY="289.0" prefHeight="37.0" prefWidth="84.0" text="Produto">
-               <font>
-                  <Font name="Times New Roman Bold" size="24.0" />
-               </font>
-            </Label>
+            <AnchorPane layoutX="-4.0" layoutY="50.0" prefHeight="550.0" prefWidth="225.0" style="-fx-background-color: #f7d340;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-4.0" AnchorPane.rightAnchor="879.0" AnchorPane.topAnchor="50.0">
+               <children>
+                  <ImageView fitHeight="125.0" fitWidth="111.0" layoutX="63.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@image/585e4bcdcb11b227491c3396.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="69.0" layoutY="153.0" text="Bem Vindo,">
+                     <font>
+                        <Font name="Times New Roman" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" layoutX="24.0" layoutY="176.0" prefHeight="23.0" prefWidth="189.0" text="Luciano">
+                     <font>
+                        <Font name="Times New Roman Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <Line endX="69.0" layoutX="118.0" layoutY="208.0" startX="-70.0" />
+                  <Button layoutX="13.0" layoutY="515.0" mnemonicParsing="false" onAction="#buttonCloseApp" style="-fx-background-radius: 60; -fx-background-color: transparent;" text="Sair">
+                     <graphic>
+                        <ImageView fitHeight="17.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@image/sairImagem-removebg-preview.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Label layoutX="29.0" layoutY="275.0" text="Tabela Categoria">
+                     <font>
+                        <Font name="Times New Roman Bold Italic" size="25.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="-4.0" layoutY="-2.0" prefHeight="52.0" prefWidth="225.0" style="-fx-background-color: #f7d340;">
+               <children>
+                  <Label alignment="CENTER" layoutX="7.0" layoutY="16.0" prefHeight="16.0" prefWidth="212.0" text="Loja Online">
+                     <font>
+                        <Font name="Times New Roman Bold Italic" size="19.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="244.0" layoutY="17.0" prefHeight="565.0" prefWidth="836.0" style="-fx-background-radius: 8; -fx-background-color: fff;">
+               <effect>
+                  <DropShadow />
+               </effect>
+               <children>
+                  <TableView layoutX="26.0" layoutY="39.0" prefHeight="513.0" prefWidth="780.0">
+                    <columns>
+                        <TableColumn prefWidth="75.0" text="ID da categoria" />
+                      <TableColumn prefWidth="470.0" text="Nome da Categoria" />
+                      <TableColumn prefWidth="309.0" text="Descrição da Categoria" />
+                    </columns>
+                  </TableView>
+                  <TextField layoutX="26.0" layoutY="5.0" prefHeight="25.0" prefWidth="268.0" promptText="Pesquisar" style="-fx-background-radius: 8;">
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </TextField>
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
-      <Label layoutX="258.0" layoutY="35.0" text="Nome Produto: ">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label layoutX="225.0" layoutY="61.0" text="Categoria do Produto:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label layoutX="310.0" layoutY="87.0" text="Preço:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label layoutX="225.0" layoutY="116.0" text="Descrição do Produto:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <TextField fx:id="detailNameProduct" layoutX="388.0" layoutY="33.0" />
-      <TextField fx:id="detailCategoryProduct" layoutX="388.0" layoutY="59.0" />
-      <TextField fx:id="detailPriceProduct" layoutX="388.0" layoutY="85.0" />
-      <TextField fx:id="detailDesProduct" layoutX="388.0" layoutY="114.0" prefHeight="261.0" prefWidth="149.0" />
    </children>
-</AnchorPane>
+</StackPane>

@@ -29,6 +29,7 @@ import static com.example.tgpsi_m19_luciano_bajurea.ConexaoBD.*;
 
 public class PrincipalController implements Initializable {
 
+    public TableColumn tableColumnDesc;
     @FXML
     private Button btnSeeDetailProduct;
     @FXML
@@ -159,7 +160,7 @@ public class PrincipalController implements Initializable {
 
     public void buttonOnClient(ActionEvent actionEvent) {
         // Oculta os painéis relacionados a Clientes, Vendedores e Informações "Acerca de..."
-        // Torna visível o painel relacionado ao Produto
+        // Torna visível o painel relacionado ao Cliente
         AnchorPaneClient.setVisible(true);
         AnchorPaneFornecedor.setVisible(false);
         AnchorPaneAbout.setVisible(false);
@@ -168,7 +169,7 @@ public class PrincipalController implements Initializable {
 
     public void buttonFornecedor(ActionEvent actionEvent) {
         // Oculta os painéis relacionados a Clientes, Informações "Acerca de..." e Produtos
-        // Torna visível o painel relacionado o Vendedor
+        // Torna visível o painel relacionado o fornecedor
         AnchorPaneClient.setVisible(false);
         AnchorPaneFornecedor.setVisible(true);
         AnchorPaneAbout.setVisible(false);
@@ -185,8 +186,8 @@ public class PrincipalController implements Initializable {
     }
 
     public void buttonAbout(ActionEvent actionEvent) {
-        // Oculta os painéis relacionados a Vendedores, Informações "Acerca de..." e Produtos
-        // Torna visível o painel relacionado a Clientes
+        // Oculta os painéis relacionados a Cliente, Fornecedor e Produtos
+        // Torna visível o painel relacionado a Acerca de
         AnchorPaneClient.setVisible(false);
         AnchorPaneFornecedor.setVisible(false);
         AnchorPaneAbout.setVisible(true);
@@ -194,6 +195,9 @@ public class PrincipalController implements Initializable {
 
     }
 
+    /* Ao clicar no botão fechar aparece um alerta a questionar se desejo sair,
+     * apos ao clicar que sim fecha-me o programa
+     */
     public void buttonCloseApp(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Sair da aplicação");
@@ -213,18 +217,25 @@ public class PrincipalController implements Initializable {
     //-------------------------------------------------------------------------------
     // PRODUTO
 
+    // Declaração de um array de strings que contém os tipos de produtos disponíveis
     private String[] typeProductCombo = {"Roupa", "Rélogios", "Objetos automovel"};
+
+    // Método para inicializar os itens do ComboBox de categorias de produtos
     public void InventoryTypeProduct(){
+        // Cria uma lista para guardar os tipos de produtos
         List<String> ListP = new ArrayList<>();
+
+        // Adiciona cada tipo de produto do array à lista
         for(String data : typeProductCombo){
             ListP.add(data);
         }
+
+        // Converte a lista para um ObservableList, que é necessário para o ComboBox no JavaFX
         ObservableList listData =FXCollections.observableArrayList(ListP);
 
+        // Define os itens do ComboBox de categorias de produtos como o ObservableList criado
         productCategoria.setItems(listData);
     }
-
-
 
     public void verProdutos(MouseEvent event) {
         // Obtém o objeto Produto selecionado na tabela
@@ -328,20 +339,24 @@ public class PrincipalController implements Initializable {
     }
 
     public void buttonRemove(ActionEvent actionEvent)  {
+        // Verifica se algum dos campos obrigatórios está vazio
         if (productName.getText().isEmpty()  || productPrice.getText().isEmpty()|| productCategoria.getSelectionModel().getSelectedItem() == null) {
+            // Mostra um alerta de erro se algum campo estiver vazio
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO");
             alert.setHeaderText("Nenhum Produto selecionado!");
             alert.setContentText("Selecione um Produto para remover.");
             alert.showAndWait();
         } else {
-            // Obtenha a conexão com o banco de dados
+            // Obtém a conexão com a base de dados
             Connection conn = ConexaoBD.openDB();
             if (conn != null) {
+                // Obtém os valores dos campos do formulário
                 String newName = productName.getText();
                 String newCategoria = String.valueOf(productCategoria.getSelectionModel().getSelectedItem());
                 double newPrice = Double.parseDouble(productPrice.getText());
 
+                // Mostra um alerta de confirmação para a remoção do produto
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("CONFIRMAR");
                 alert.setHeaderText("Deseja mesmo remover este Produto?");
@@ -350,11 +365,16 @@ public class PrincipalController implements Initializable {
                 ButtonType buttonNao = new ButtonType("Não");
                 alert.getButtonTypes().setAll(buttonSim, buttonNao);
 
+                // Aguarda a escolha do utilizador
                 Optional<ButtonType> choose = alert.showAndWait();
                 if (choose.isPresent() && choose.get() == buttonSim) {
+                    // Obtém o ID do produto a ser removido
                     int id = Integer.parseInt(productId.getText());
+                    // Remove o produto da base de dados usando o DAO
                     ProdutoDAO.removerProduto(id);
                     //System.out.println(Settings.getListForn().size());
+
+                    // Remove o produto da tabela
                     Produto produtoRemovido = (Produto) tableViewProduct.getSelectionModel().getSelectedItem();
                     tableViewProduct.getItems().remove(produtoRemovido);
 
@@ -363,7 +383,7 @@ public class PrincipalController implements Initializable {
                     productPrice.clear();
                     productCategoria.getSelectionModel().clearSelection();
 
-                    // Mostrar alerta de remoção bem-sucedida
+                    // Mostra um alerta de remoção bem-sucedida
                     Alert alertRmProduto = new Alert(Alert.AlertType.INFORMATION);
                     alertRmProduto.setTitle("INFORMAÇÃO");
                     alertRmProduto.setHeaderText(null);
@@ -371,6 +391,7 @@ public class PrincipalController implements Initializable {
                     alertRmProduto.showAndWait();
                 }
             } else {
+                // Mostra um alerta se a conexão com a base de dados falhar
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("ERRO");
                 alert.setHeaderText(null);
@@ -381,7 +402,100 @@ public class PrincipalController implements Initializable {
     }
 
     public void buttonEdit(ActionEvent actionEvent) {
+        // Verifica se algum dos campos obrigatórios está vazio
+        if (productName.getText().isEmpty() || productCategoria.getSelectionModel().getSelectedItem() == null || productPrice.getText().isEmpty()) {
+            // Mostra um alerta de erro se algum campo estiver vazio
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERRO!");
+            alert.setHeaderText("Por favor,coloque todos os dados nos respetivos campos");
+            alert.setContentText("Clique no botão para tentar novamente!");
+            alert.showAndWait();
+        } else {
+            // Obtém o ID do produto a partir do campo de texto
+            int newProductId = Integer.parseInt(productId.getText());
+            Produto produtoEdit = null;
 
+            // Procura o produto na lista de produtos com o ID do produto
+            for (Produto p : Settings.getListProduct()) {
+                if (p.getIdProduto() == newProductId) {
+                    produtoEdit = p;
+                    break;
+                }
+            }
+
+            // Se o produto foi encontrado, atualiza os seus atributos
+            if (produtoEdit != null) {
+                produtoEdit.setNomeProduto(productName.getText());
+                produtoEdit.setDescricaoProduto((String) productCategoria.getSelectionModel().getSelectedItem());
+                produtoEdit.setPrecoProduto(Double.parseDouble(productPrice.getText()));
+
+                // Mostra um alerta de confirmação a questionar se deseja realmente editar o produto
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Editar Fornecedor");
+                alert.setHeaderText("Deseja realmente editar?");
+                alert.setContentText("Clique no botão para continuar!");
+                ButtonType buttonSim = new ButtonType("Sim");
+                ButtonType buttonNao = new ButtonType("Não");
+                alert.getButtonTypes().setAll(buttonSim, buttonNao);
+
+                // Aguarda a escolha do utilizador
+                Optional<ButtonType> choose = alert.showAndWait();
+                if (choose.isPresent() && choose.get() == buttonSim) {
+                    // Obtém a conexão com a base de dados
+                    Connection conn = null;
+                    try {
+                        conn = ConexaoBD.openDB();
+                        if (conn != null) {
+                            // Cria o SQL de atualização
+                            String sql = "UPDATE produto SET nomeProduto = ?, descricaoProduto = ?, precoProduto = ? WHERE idProduto = ?";
+                            // Define os parâmetros do SQL
+                            PreparedStatement stmt = conn.prepareStatement(sql);
+                            stmt.setString(1, productName.getText());
+                            stmt.setString(2, (String) productCategoria.getSelectionModel().getSelectedItem());
+                            stmt.setString(3, productPrice.getText());
+                            stmt.setInt(4, newProductId)    ;
+
+                            // Executa a atualização e verifica se alguma linha foi afetada
+                            int rowsAffected = stmt.executeUpdate();
+                            if (rowsAffected > 0) {
+                                // Atualiza o produto na lista de produtos
+                                for (Produto produto : Settings.getListProduct()) {
+                                    if (produto.getIdProduto() == produtoEdit.getIdProduto()) {
+                                        int index = Settings.getListProduct().indexOf(produto);
+                                        Settings.getListProduct().set(index, produtoEdit);
+                                        break;
+                                    }
+                                }
+                                // Atualiza a visualização da tabela
+                                tableViewProduct.refresh();
+
+                                // Mostra um alerta de confirmação de edição bem-sucedida
+                                Alert alertEditForn = new Alert(Alert.AlertType.INFORMATION);
+                                alertEditForn.setTitle("CONFIRMAÇÃO!");
+                                alertEditForn.setHeaderText("Edição realizada com sucesso!");
+                                alertEditForn.setContentText("Clique no botão para continuar.");
+                                alertEditForn.showAndWait();
+                                Settings.setFornecedorEdit(null);
+                            }
+                        } else {
+                            // Mostra um alerta de erro se a conexão com a base de dados falhar
+                            Alert alertConnError = new Alert(Alert.AlertType.ERROR);
+                            alertConnError.setTitle("ERRO!");
+                            alertConnError.setHeaderText(null);
+                            alertConnError.setContentText("Não foi possível conectar à base de dados.");
+                            alertConnError.showAndWait();
+                        }
+                    } catch (SQLException e) {
+                        // Mostra um alerta de erro se ocorrer uma exceção SQL
+                        Alert alertError = new Alert(Alert.AlertType.ERROR);
+                        alertError.setTitle("ERRO!");
+                        alertError.setHeaderText(null);
+                        alertError.setContentText("Erro ao atualizar o produto: " + e.getMessage());
+                        alertError.showAndWait();
+                    }
+                }
+            }
+        }
     }
 
     public void ProductListar() {
@@ -417,7 +531,7 @@ public class PrincipalController implements Initializable {
     //----------------------------------------------------------------------------------------
     // CLIENTES
     public void verClientes(MouseEvent event) {
-        // Obtém os dados do Fornecedor selecionado na tabela
+        // Obtém os dados do Cliente selecionado na tabela
         Cliente ClientDataVer = (Cliente) tableViewClient.getSelectionModel().getSelectedItem();
 
         // Mostra o nome do Cliente no campo de texto correspondente
@@ -561,13 +675,6 @@ public class PrincipalController implements Initializable {
                     alert.setContentText("Não foi possível ligar à base de dados.");
                     alert.showAndWait();
                 }
-            } catch (NumberFormatException e) {
-                // Exibe um alerta de erro se houver um problema com a conversão de tipos de dados
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("ERRO");
-                alert.setHeaderText(null);
-                alert.setContentText("Certifique-se de que todos os campos estão no formato correto.");
-                alert.showAndWait();
             } finally {
                 ConexaoBD.closeDB(); // Fecha a conexão com o banco de dados após o uso
             }
@@ -575,22 +682,26 @@ public class PrincipalController implements Initializable {
     }
 
     public void buttonRemoveClient(ActionEvent actionEvent) {
+        // Verifica se algum dos campos obrigatórios está vazio
         if (clientName.getText().isEmpty() || clientNIF.getText().isEmpty() || clientAdress.getText().isEmpty() || clientEmail.getText().isEmpty() || clientNumTel.getText().isEmpty()) {
+            // Mostra um alerta de erro se algum campo estiver vazio
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO");
             alert.setHeaderText("Nenhum Cliente selecionado!");
             alert.setContentText("Selecione um fornecedor para remover.");
             alert.showAndWait();
         } else {
-            // Obtenha a conexão com o banco de dados
+            // Obtém a conexão com a base de dados
             Connection conn = ConexaoBD.openDB();
             if (conn != null) {
+                // Obtém os valores dos campos de texto
                 String newName = clientName.getText();
                 String newNIF = clientNIF.getText();
                 String newAdress = clientAdress.getText();
                 String newEmail = clientEmail.getText();
                 String newNumTel = clientNumTel.getText();
 
+                // Mostra um alerta de confirmação perguntando ao utilizador se deseja realmente remover o cliente
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("CONFIRMAR");
                 alert.setHeaderText("Deseja mesmo remover este cliente?");
@@ -599,11 +710,16 @@ public class PrincipalController implements Initializable {
                 ButtonType buttonNao = new ButtonType("Não");
                 alert.getButtonTypes().setAll(buttonSim, buttonNao);
 
+                // Aguarda a escolha do utilizador
                 Optional<ButtonType> choose = alert.showAndWait();
                 if (choose.isPresent() && choose.get() == buttonSim) {
+                    // Obtém o ID do cliente a partir do campo de texto
                     int id = Integer.parseInt(clientId.getText());
+                    // Remove o cliente do banco de dados
                     ClienteDAO.removerClient(id);
+                    // Obtém o cliente selecionado na tabela
                     Cliente clienteRemovido = (Cliente) tableViewClient.getSelectionModel().getSelectedItem();
+                    // Remove o cliente da tabela de visualização
                     tableViewClient.getItems().remove(clienteRemovido);
 
                     // Limpeza dos campos após a remoção
@@ -622,6 +738,7 @@ public class PrincipalController implements Initializable {
                     alertRmClient.showAndWait();
                 }
             } else {
+                // Mostra um alerta de erro se a conexão com a base de dados falhar
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("ERRO");
                 alert.setHeaderText(null);
@@ -632,30 +749,36 @@ public class PrincipalController implements Initializable {
     }
 
     public void buttonEditClient(ActionEvent actionEvent) {
+        // Verifica se algum dos campos obrigatórios está vazio
         if (clientName.getText().isEmpty() || clientNIF.getText().isEmpty() || clientAdress.getText().isEmpty() || clientEmail.getText().isEmpty() || clientNumTel.getText().isEmpty()) {
+            // Mostra um alerta de erro se algum campo estiver vazio
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
             alert.setHeaderText("Por favor,coloque todos os dados nos respetivos campos");
             alert.setContentText("Clique no botão para tentar novamente!");
             alert.showAndWait();
         } else {
+            // Obtém o ID do cliente a partir do campo de textov
             int newClientId = Integer.parseInt(clientId.getText());
-            Cliente clienteEditado = null;
+            Cliente clienteEdit = null;
 
+            // Procura o cliente na lista de clientes
             for (Cliente c : Settings.getListClient()) {
                 if (c.getIdCliente() == newClientId) {
-                    clienteEditado = c;
+                    clienteEdit = c;
                     break;
                 }
             }
+            // Se o cliente foi encontrado
+            if (clienteEdit != null) {
+                // Atualiza os dados do cliente com os valores dos campos de texto
+                clienteEdit.setNome(clientName.getText());
+                clienteEdit.setNif(clientNIF.getText());
+                clienteEdit.setMorada(clientAdress.getText());
+                clienteEdit.setNumTelemovel(clientNumTel.getText());
+                clienteEdit.setEmail(clientEmail.getText());
 
-            if (clienteEditado != null) {
-                clienteEditado.setNome(clientName.getText());
-                clienteEditado.setNif(clientNIF.getText());
-                clienteEditado.setMorada(clientAdress.getText());
-                clienteEditado.setNumTelemovel(clientNumTel.getText());
-                clienteEditado.setEmail(clientEmail.getText());
-
+                // Mostra um alerta de confirmação perguntando ao utilizador se deseja realmente editar o cliente
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Editar Cliente");
                 alert.setHeaderText("Deseja realmente editar?");
@@ -663,43 +786,48 @@ public class PrincipalController implements Initializable {
                 ButtonType buttonSim = new ButtonType("Sim");
                 ButtonType buttonNao = new ButtonType("Não");
                 alert.getButtonTypes().setAll(buttonSim, buttonNao);
-
+                // Aguarda a escolha do utilizado
                 Optional<ButtonType> choose = alert.showAndWait();
                 if (choose.isPresent() && choose.get() == buttonSim) {
                     Connection conn = null;
                     try {
+                        // Obtém a conexão com a base de dados
                         conn = ConexaoBD.openDB();
                         if (conn != null) {
-                            String updateQuery = "UPDATE cliente SET nome = ?, nif = ?, morada = ?, numTelemovel = ?, email = ? WHERE idCliente = ?";
-                            PreparedStatement preparedStatement = conn.prepareStatement(updateQuery);
-                            preparedStatement.setString(1, clientName.getText());
-                            preparedStatement.setString(2, clientNIF.getText());
-                            preparedStatement.setString(3, clientAdress.getText());
-                            preparedStatement.setString(4, clientNumTel.getText());
-                            preparedStatement.setString(5, clientEmail.getText());
-                            preparedStatement.setInt(6, newClientId);
+                            // Cria o SQL de atualização
+                            String sql = "UPDATE cliente SET nome = ?, nif = ?, morada = ?, numTelemovel = ?, email = ? WHERE idCliente = ?";
+                            // Define os parâmetros do SQL
+                            PreparedStatement stmt = conn.prepareStatement(sql);
+                            stmt.setString(1, clientName.getText());
+                            stmt.setString(2, clientNIF.getText());
+                            stmt.setString(3, clientAdress.getText());
+                            stmt.setString(4, clientNumTel.getText());
+                            stmt.setString(5, clientEmail.getText());
+                            stmt.setInt(6, newClientId);
 
-                            int rowsAffected = preparedStatement.executeUpdate();
+                            // Executa a atualização e verifica se alguma linha foi afetada
+                            int rowsAffected = stmt.executeUpdate();
                             if (rowsAffected > 0) {
+                                // Atualiza a lista de clientes com os novos dados
                                 for (Cliente cliente : Settings.getListClient()) {
-                                    if (cliente.getIdCliente() == clienteEditado.getIdCliente()) {
+                                    if (cliente.getIdCliente() == clienteEdit.getIdCliente()) {
                                         int index = Settings.getListClient().indexOf(cliente);
-                                        Settings.getListClient().set(index, clienteEditado);
+                                        Settings.getListClient().set(index, clienteEdit);
                                         break;
                                     }
                                 }
                                 tableViewClient.refresh();
 
+                                // Mostra um alerta de confirmação de edição bem-sucedida
                                 Alert alertEditClient = new Alert(Alert.AlertType.INFORMATION);
                                 alertEditClient.setTitle("CONFIRMAÇÃO!");
                                 alertEditClient.setHeaderText("Edição realizada com sucesso!");
                                 alertEditClient.setContentText("Clique no botão para continuar.");
                                 alertEditClient.showAndWait();
                                 Settings.setClientEdit(null);
-                            } else {
-                                //throw new SQLException("Erro ao atualizar o cliente no banco de dados.");
                             }
                         } else {
+                            // Mostra um alerta de erro se a conexão com a base de dados falhar
                             Alert alertConnError = new Alert(Alert.AlertType.ERROR);
                             alertConnError.setTitle("ERRO!");
                             alertConnError.setHeaderText(null);
@@ -707,6 +835,7 @@ public class PrincipalController implements Initializable {
                             alertConnError.showAndWait();
                         }
                     } catch (SQLException e) {
+                        // Mostra um alerta de erro se ocorrer um problema ao atualizar o cliente
                         Alert alertError = new Alert(Alert.AlertType.ERROR);
                         alertError.setTitle("ERRO!");
                         alertError.setHeaderText(null);
@@ -718,6 +847,7 @@ public class PrincipalController implements Initializable {
         }
     }
 
+    // Método para mostrar os dados do clientes numa tabela
     public void clienteListar() {
         // Configura as colunas da tabela para associar os atributos do objeto Fornecedor
         tableColumnIdClient.setCellValueFactory(new PropertyValueFactory<Cliente, Integer>("idCliente"));
@@ -726,6 +856,7 @@ public class PrincipalController implements Initializable {
         tableColumnAdressClient.setCellValueFactory(new PropertyValueFactory<Cliente, String>("morada"));
         tableColumnEmailCliente.setCellValueFactory(new PropertyValueFactory<Cliente, String>("email"));
         tableColumnNumTelClient.setCellValueFactory(new PropertyValueFactory<Cliente, String>("numTelemovel"));
+
 
         tableViewClient.setItems(ClienteDAO.listCliente());
     }
@@ -737,7 +868,7 @@ public class PrincipalController implements Initializable {
         // Obtém os dados do Fornecedor selecionado na tabela
         Fornecedor FornDataVer = (Fornecedor) tableViewFornecedor.getSelectionModel().getSelectedItem();
 
-        // Mostra o nome do Cliente no campo de texto correspondente
+        // Mostra o nome do Fornecedor no campo de texto correspondente
         fornecedorId.setText(String.valueOf(FornDataVer.getIdFornecedor()));
 
         // Define o nome do Fornecedor no campo de texto correspondente
@@ -771,13 +902,13 @@ public class PrincipalController implements Initializable {
                 // Converte o valor da pesquisa para minúsculas
                 String pesquisarForn = newValue.toLowerCase();
 
-                // Verifica se o ID do cliente contém o valor da pesquisa
+                // Verifica se o ID do Fornecedor contém o valor da pesquisa
                 if (String.valueOf(predicateClient.getIdFornecedor()).contains(pesquisarForn)){
                     return true;
-                    // Verifica se o nome do cliente contém o valor da pesquisa
+                    // Verifica se o nome do Fornecedor contém o valor da pesquisa
                 }else if (predicateClient.getNome().toLowerCase().contains(pesquisarForn)) {
                     return true;
-                    // Verifica se o telefone do cliente contém o valor da pesquisa
+                    // Verifica se o telefone do Fornecedor contém o valor da pesquisa
                 } else if (predicateClient.getNumTelemovel().toLowerCase().contains(pesquisarForn)) {
                     return true;
                 }
@@ -886,6 +1017,7 @@ public class PrincipalController implements Initializable {
     }
 
     public void buttonFornRemove(ActionEvent actionEvent) throws SQLException {
+        // Verifica se algum dos campos obrigatórios está vazio
         if (fornecedorName.getText().isEmpty() || fornecedorNIF.getText().isEmpty() || fornecedorAdress.getText().isEmpty() || fornecedorEmail.getText().isEmpty() || fornecedorNumTel.getText().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO");
@@ -896,12 +1028,14 @@ public class PrincipalController implements Initializable {
             // Obtenha a conexão com o banco de dados
             Connection conn = ConexaoBD.openDB();
             if (conn != null) {
+                // Obtém os dados do fornecedor dos campos de texto
                 String newName = fornecedorName.getText();
                 String newNIF = fornecedorNIF.getText();
                 String newAdress = fornecedorAdress.getText();
                 String newEmail = fornecedorEmail.getText();
                 String newNumTel = fornecedorNumTel.getText();
 
+                // Mostra um alerta a questionar se deseja realmente remover o fornecedor
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("CONFIRMAR");
                 alert.setHeaderText("Deseja mesmo remover este fornecedor?");
@@ -910,11 +1044,15 @@ public class PrincipalController implements Initializable {
                 ButtonType buttonNao = new ButtonType("Não");
                 alert.getButtonTypes().setAll(buttonSim, buttonNao);
 
+                // Aguarda a escolha do utilizador
                 Optional<ButtonType> choose = alert.showAndWait();
                 if (choose.isPresent() && choose.get() == buttonSim) {
+                    // Obtém o ID do fornecedor a partir do campo de texto
                     int id = Integer.parseInt(fornecedorId.getText());
+                    // Remove o fornecedor da base de dados
                     FornecedorDAO.removerForn(id);
                     //System.out.println(Settings.getListForn().size());
+                    // Remove o fornecedor da tabela de visualização
                     Fornecedor fornecedorRemovido = (Fornecedor) tableViewFornecedor.getSelectionModel().getSelectedItem();
                     tableViewFornecedor.getItems().remove(fornecedorRemovido);
 
@@ -934,6 +1072,7 @@ public class PrincipalController implements Initializable {
                     alertRmFornecedor.showAndWait();
                 }
             } else {
+                // Mostra um alerta de erro se a conexão com a base de dados falhar
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("ERRO");
                 alert.setHeaderText(null);
@@ -982,16 +1121,16 @@ public class PrincipalController implements Initializable {
                     try {
                         conn = ConexaoBD.openDB();
                         if (conn != null) {
-                            String updateQuery = "UPDATE fornecedor SET nome = ?, nif = ?, morada = ?, numTelemovel = ?, email = ? WHERE idFornecedor = ?";
-                            PreparedStatement preparedStatement = conn.prepareStatement(updateQuery);
-                            preparedStatement.setString(1, fornecedorName.getText());
-                            preparedStatement.setString(2, fornecedorNIF.getText());
-                            preparedStatement.setString(3, fornecedorAdress.getText());
-                            preparedStatement.setString(4, fornecedorNumTel.getText());
-                            preparedStatement.setString(5, fornecedorEmail.getText());
-                            preparedStatement.setInt(6, newFornId);
+                            String sql = "UPDATE fornecedor SET nome = ?, nif = ?, morada = ?, numTelemovel = ?, email = ? WHERE idFornecedor = ?";
+                            PreparedStatement stmt = conn.prepareStatement(sql);
+                            stmt.setString(1, fornecedorName.getText());
+                            stmt.setString(2, fornecedorNIF.getText());
+                            stmt.setString(3, fornecedorAdress.getText());
+                            stmt.setString(4, fornecedorNumTel.getText());
+                            stmt.setString(5, fornecedorEmail.getText());
+                            stmt.setInt(6, newFornId);
 
-                            int rowsAffected = preparedStatement.executeUpdate();
+                            int rowsAffected = stmt.executeUpdate();
                             if (rowsAffected > 0) {
                                 for (Fornecedor fornecedor : Settings.getListForn()) {
                                     if (fornecedor.getIdFornecedor() == fornecedorEdit.getIdFornecedor()) {
@@ -1008,8 +1147,6 @@ public class PrincipalController implements Initializable {
                                 alertEditForn.setContentText("Clique no botão para continuar.");
                                 alertEditForn.showAndWait();
                                 Settings.setFornecedorEdit(null);
-                            } else {
-                                //throw new SQLException("Erro ao atualizar o cliente no banco de dados.");
                             }
                         } else {
                             Alert alertConnError = new Alert(Alert.AlertType.ERROR);
