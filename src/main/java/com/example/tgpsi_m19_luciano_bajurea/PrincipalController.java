@@ -198,10 +198,11 @@ public class PrincipalController implements Initializable {
 
     }
 
-    /* Ao clicar no botão fechar aparece um alerta a questionar se desejo sair,
-     * apos ao clicar que sim fecha-me o programa
-     */
+
     public void buttonCloseApp(ActionEvent actionEvent) {
+        /* Ao clicar no botão fechar aparece um alerta a questionar se desejo sair,
+         * após ao clicar que sim fecha-me o programa
+         */
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Sair da aplicação");
         alert.setHeaderText("Deseja mesmo sair da apliação?");
@@ -249,7 +250,7 @@ public class PrincipalController implements Initializable {
         productName.setText(String.valueOf(ProductDataVer.getNomeProduto()));
 
         // Define o valor selecionado no ComboBox com o tipo de produto do objeto Produto
-        productCategoria.setValue(ProductDataVer.getDescricaoProduto());
+        productCategoria.setValue(ProductDataVer.getCategoriaProduto());
 
         // Define o campo de preço com o valor do preço do objeto Produto
         productPrice.setText(String.valueOf(ProductDataVer.getPrecoProduto()));
@@ -275,6 +276,9 @@ public class PrincipalController implements Initializable {
                     return true;
                     // Verifica se o nome do Produto contém o valor da pesquisa
                 }else if (predicateProduct.getNomeProduto().toLowerCase().contains(pesquisarProduto)) {
+                    return true;
+                    // Verifica se a categoria do Produto contém o valor da pesquisa
+                }else if (predicateProduct.getCategoriaProduto().toLowerCase().contains(pesquisarProduto)) {
                     return true;
                     // Verifica se o preço do Produto contém o valor da pesquisa
                 } else if (String.valueOf(predicateProduct.getPrecoProduto()).contains(pesquisarProduto)) {
@@ -321,7 +325,7 @@ public class PrincipalController implements Initializable {
                         if (buttonType == buttonSim) {
                             // Tenta adicionar o novo produto ao banco de dados
                             try {
-                                String sql = "INSERT INTO produto (nomeProduto, precoProduto, descricaoProduto) VALUES (?, ?, ?)";
+                                String sql = "INSERT INTO produto (nomeProduto, precoProduto, categoriaProduto) VALUES (?, ?, ?)";
                                 PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                                 stmt.setString(1, newName);
                                 stmt.setDouble(2, newPrice);
@@ -463,7 +467,7 @@ public class PrincipalController implements Initializable {
             // Se o produto foi encontrado, atualiza os seus atributos
             if (produtoEdit != null) {
                 produtoEdit.setNomeProduto(productName.getText());
-                produtoEdit.setDescricaoProduto((String) productCategoria.getSelectionModel().getSelectedItem());
+                produtoEdit.setCategoriaProduto((String) productCategoria.getSelectionModel().getSelectedItem());
                 produtoEdit.setPrecoProduto(Double.parseDouble(productPrice.getText()));
 
                 // Mostra um alerta de confirmação a questionar se deseja realmente editar o produto
@@ -484,7 +488,7 @@ public class PrincipalController implements Initializable {
                         conn = ConexaoBD.openDB();
                         if (conn != null) {
                             // Cria o SQL de atualização
-                            String sql = "UPDATE produto SET nomeProduto = ?, descricaoProduto = ?, precoProduto = ? WHERE idProduto = ?";
+                            String sql = "UPDATE produto SET nomeProduto = ?, categoriaProduto = ?, precoProduto = ? WHERE idProduto = ?";
                             // Define os parâmetros do SQL
                             PreparedStatement stmt = conn.prepareStatement(sql);
                             stmt.setString(1, productName.getText());
@@ -539,7 +543,7 @@ public class PrincipalController implements Initializable {
         // Configura as colunas da tabela para associar os atributos do objeto Produto
         tableColumnIdProduct.setCellValueFactory(new PropertyValueFactory<Produto, Integer>("idProduto"));
         tableColumnNameProduct.setCellValueFactory(new PropertyValueFactory<Produto, String>("nomeProduto"));
-        tableColumnTypeProduct.setCellValueFactory(new PropertyValueFactory<Produto, String>("descricaoProduto"));
+        tableColumnTypeProduct.setCellValueFactory(new PropertyValueFactory<Produto, String>("categoriaProduto"));
         tableColumnPriceProduct.setCellValueFactory(new PropertyValueFactory<Produto, Double>("precoProduto"));
 
         Settings.getListProduct().clear();
@@ -552,7 +556,7 @@ public class PrincipalController implements Initializable {
         Parent scene = FXMLLoader.load(getClass().getResource("detalheProduto.fxml"));
 
         Stage seeDetailProduct = new Stage();
-        seeDetailProduct.setTitle("Produto - Detalhe do produto");
+        seeDetailProduct.setTitle("Categoria - Detalhe da Categoria");
 
         // Associação da Scene à Stage
         seeDetailProduct.setScene(new Scene(scene));
@@ -931,7 +935,7 @@ public class PrincipalController implements Initializable {
         // Adiciona um listener ao texto da barra de pesquisa
         FornecedorSearch.textProperty().addListener((Observable, oldValue, newValue) ->{
 
-            filter.setPredicate(predicateClient ->{
+            filter.setPredicate(predicateForn ->{
                 // Verifica se o novo valor da pesquisa é nulo ou vazio
                 if(newValue == null && newValue.isEmpty()){
                     return true;
@@ -940,13 +944,13 @@ public class PrincipalController implements Initializable {
                 String pesquisarForn = newValue.toLowerCase();
 
                 // Verifica se o ID do Fornecedor contém o valor da pesquisa
-                if (String.valueOf(predicateClient.getIdFornecedor()).contains(pesquisarForn)){
+                if (String.valueOf(predicateForn.getIdFornecedor()).contains(pesquisarForn)){
                     return true;
                     // Verifica se o nome do Fornecedor contém o valor da pesquisa
-                }else if (predicateClient.getNome().toLowerCase().contains(pesquisarForn)) {
+                }else if (predicateForn.getNome().toLowerCase().contains(pesquisarForn)) {
                     return true;
                     // Verifica se o telefone do Fornecedor contém o valor da pesquisa
-                } else if (predicateClient.getNumTelemovel().toLowerCase().contains(pesquisarForn)) {
+                } else if (predicateForn.getNumTelemovel().toLowerCase().contains(pesquisarForn)) {
                     return true;
                 }
                 // Retorna falso se nenhum critério for atendido
@@ -1220,23 +1224,6 @@ public class PrincipalController implements Initializable {
         }
     }
 
-    public void buttonDetailForn(ActionEvent actionEvent) throws Exception {
-        Parent scene = FXMLLoader.load(getClass().getResource("detalheFornecedor.fxml"));
-
-        Stage seeDetailForn = new Stage();
-        seeDetailForn.setTitle("Fornecedor - Detalhe do Fornecedor");
-
-        // Associação da Scene à Stage
-        seeDetailForn.setScene(new Scene(scene));
-
-        // Abertura da janela seeDetailProduct em modo MODAL, em relação à primaryStage
-        seeDetailForn.initOwner(Settings.getPrimaryStage());
-        seeDetailForn.initModality(Modality.WINDOW_MODAL);
-
-        // Abertura da janela
-        seeDetailForn.show();
-    }
-
     public void fornecedorListar() {
         // Configura as colunas da tabela para associar os atributos do objeto Fornecedor
         tableColumnIdForn.setCellValueFactory(new PropertyValueFactory<Fornecedor, Integer>("idFornecedor"));
@@ -1248,5 +1235,4 @@ public class PrincipalController implements Initializable {
 
         tableViewFornecedor.setItems(FornecedorDAO.listFornecedor());
     }
-
 }

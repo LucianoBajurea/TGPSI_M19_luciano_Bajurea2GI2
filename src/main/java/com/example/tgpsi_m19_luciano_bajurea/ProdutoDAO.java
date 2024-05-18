@@ -22,7 +22,7 @@ public class ProdutoDAO {
                 int idProduto = rs.getInt("idProduto");
                 String nomeProduto = rs.getString("nomeProduto");
                 double preco = rs.getDouble("precoProduto");
-                String descricao = rs.getString("descricaoProduto");
+                String descricao = rs.getString("categoriaProduto");
                 Produto p = new Produto(idProduto, nomeProduto, preco, descricao);
                 produto.add(p);
             }

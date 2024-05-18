@@ -5,7 +5,7 @@ public class Produto {
     private int idProduto;
     private String nomeProduto;
     private double precoProduto;
-    private String descricaoProduto;
+    private String categoriaProduto;
 
     //-----------------------------------------------------------
     //Método Contrutor Vázio
@@ -14,19 +14,19 @@ public class Produto {
 
     //-----------------------------------------------------------
     //Método Contrutor da Classe Produto com todos os atributos
-    public Produto(int idProduto, String nomeProduto, double precoProduto, String descricaoProduto) {
+    public Produto(int idProduto, String nomeProduto, double precoProduto, String categoriaProduto) {
         this.idProduto = idProduto;
         this.nomeProduto = nomeProduto;
         this.precoProduto = precoProduto;
-        this.descricaoProduto = descricaoProduto;
+        this.categoriaProduto = categoriaProduto;
     }
 
     //-----------------------------------------------------------
     //Método Contrutor da Classe Produto com os atributos menos o ID
-    public Produto(String nomeProduto, double precoProduto, String descricaoProduto) {
+    public Produto(String nomeProduto, double precoProduto, String categoriaProduto) {
         this.nomeProduto = nomeProduto;
         this.precoProduto = precoProduto;
-        this.descricaoProduto = descricaoProduto;
+        this.categoriaProduto = categoriaProduto;
     }
 
 
@@ -56,11 +56,11 @@ public class Produto {
         this.precoProduto = precoProduto;
     }
 
-    public String getDescricaoProduto() {
-        return descricaoProduto;
+    public String getCategoriaProduto() {
+        return categoriaProduto;
     }
 
-    public void setDescricaoProduto(String descricaoProduto) {
-        this.descricaoProduto = descricaoProduto;
+    public void setCategoriaProduto(String categoriaProduto) {
+        this.categoriaProduto = categoriaProduto;
     }
 }
